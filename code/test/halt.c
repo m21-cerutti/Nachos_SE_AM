@@ -15,8 +15,9 @@
 int
 main ()
 {
+	
     Halt ();
 
-    /* not reached */
+    /* not reached, to test*/
     return 0;
 }
