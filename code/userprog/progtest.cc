@@ -1,16 +1,17 @@
-// progtest.cc 
+// progtest.cc
 //      Test routines for demonstrating that Nachos can load
-//      a user program and execute it.  
+//      a user program and execute it.
 //
 //      Also, routines for testing the Console hardware device.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
 #include "system.h"
 #include "console.h"
+#include "synchconsole.h"
 #include "addrspace.h"
 #include "synch.h"
 
@@ -23,30 +24,30 @@
 void
 StartProcess (char *filename)
 {
-    OpenFile *executable = fileSystem->Open (filename);
-    AddrSpace *space;
+  OpenFile *executable = fileSystem->Open (filename);
+  AddrSpace *space;
 
-    if (executable == NULL)
-      {
-	  SetColor (stdout, ColorRed);
-	  SetBold (stdout);
-	  printf ("Unable to open file %s\n", filename);
-	  ClearColor (stdout);
-	  return;
-      }
-    space = new AddrSpace (executable);
-    currentThread->space = space;
+  if (executable == NULL)
+  {
+    SetColor (stdout, ColorRed);
+    SetBold (stdout);
+    printf ("Unable to open file %s\n", filename);
+    ClearColor (stdout);
+    return;
+  }
+  space = new AddrSpace (executable);
+  currentThread->space = space;
 
-    delete executable;		// close file
+  delete executable;		// close file
 
-    space->InitRegisters ();	// set the initial register values
-    space->RestoreState ();	// load page table register
+  space->InitRegisters ();	// set the initial register values
+  space->RestoreState ();	// load page table register
 
-    machine->DumpMem ("memory.svg");
-    machine->Run ();		// jump to the user progam
-    ASSERT (FALSE);		// machine->Run never returns;
-    // the address space exits
-    // by doing the syscall "exit"
+  machine->DumpMem ("memory.svg");
+  machine->Run ();		// jump to the user progam
+  ASSERT (FALSE);		// machine->Run never returns;
+  // the address space exits
+  // by doing the syscall "exit"
 }
 
 // Data structures needed for the console test.  Threads making
@@ -64,14 +65,14 @@ static Semaphore *writeDone;
 static void
 ReadAvailHandler (void *arg)
 {
-    (void) arg;
-    readAvail->V ();
+  (void) arg;
+  readAvail->V ();
 }
 static void
 WriteDoneHandler (void *arg)
 {
-    (void) arg;
-    writeDone->V ();
+  (void) arg;
+  writeDone->V ();
 }
 
 //----------------------------------------------------------------------
@@ -80,27 +81,72 @@ WriteDoneHandler (void *arg)
 //      the output.  Stop when the user types a 'q'.
 //----------------------------------------------------------------------
 
-void
-ConsoleTest (const char *in, const char *out)
+#ifdef CHANGED
+
+void echoChar(Console* cons, const char ch)
 {
-    char ch;
+  if(cons == NULL || writeDone == NULL)
+  return;
 
-    readAvail = new Semaphore ("read avail", 0);
-    writeDone = new Semaphore ("write done", 0);
-    console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-
-    for (;;)
-      {
-	  readAvail->P ();	// wait for character to arrive
-	  ch = console->GetChar ();
-	  console->PutChar (ch);	// echo it!
-	  writeDone->P ();	// wait for write to finish
-	  if (ch == 'q') {
-	      printf ("Nothing more, bye!\n");
-	      break;		// if q, quit
-	  }
-      }
-    delete console;
-    delete readAvail;
-    delete writeDone;
+  cons->PutChar('<');
+  writeDone->P ();
+  cons->PutChar(ch);
+  writeDone->P ();
+  cons->PutChar('>');
+  writeDone->P ();
+  cons->PutChar('\n');
+  writeDone->P ();
 }
+#endif // CHANGED
+
+
+
+void ConsoleTest (const char *in, const char *out)
+{
+  char ch;
+
+  readAvail = new Semaphore ("read avail", 0);
+  writeDone = new Semaphore ("write done", 0);
+  console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
+
+  for (;;)
+  {
+    readAvail->P ();	// wait for character to arrive
+    ch = console->GetChar ();
+    #ifdef CHANGED
+    echoChar(console, ch);
+    #else
+    console->PutChar (ch);	// echo it!
+    writeDone->P ();	// wait for write to finish
+    #endif // CHANGED
+    if (ch == 'q') {
+      #ifdef CHANGED
+      printf ("\nEnd of file.\n");
+      #endif // CHANGED
+      break;		// if q, quit
+    }
+  }
+  delete console;
+  delete readAvail;
+  delete writeDone;
+}
+
+#ifdef CHANGED
+
+void SynchConsoleTest (const char* in, const char* out)
+{
+  char ch;
+  SynchConsole* test_synchconsole = new SynchConsole(in, out);
+  while ((ch = test_synchconsole->SynchGetChar()) != EOF)
+  {
+    test_synchconsole->SynchPutChar('<');
+    test_synchconsole->SynchPutChar(ch);
+    test_synchconsole->SynchPutChar('>');
+    test_synchconsole->SynchPutChar('\n');
+  }
+  fprintf(stderr, "EOF detected in SynchConsole!\n");
+
+  delete test_synchconsole;
+}
+
+#endif //CHANGED
