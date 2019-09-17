@@ -87,15 +87,19 @@ void echoChar(Console* cons, const char ch)
 {
   if(cons == NULL || writeDone == NULL)
   return;
-
-  cons->PutChar('<');
-  writeDone->P ();
-  cons->PutChar(ch);
-  writeDone->P ();
-  cons->PutChar('>');
-  writeDone->P ();
-  cons->PutChar('\n');
-  writeDone->P ();
+  if(ch != '\n' && ch != EOF){
+    cons->PutChar('<');
+    writeDone->P ();
+    cons->PutChar(ch);
+    writeDone->P ();
+    cons->PutChar('>');
+    writeDone->P ();
+  }
+  else
+  {
+    cons->PutChar('\n');
+    writeDone->P ();
+  }
 }
 #endif // CHANGED
 
@@ -104,7 +108,7 @@ void echoChar(Console* cons, const char ch)
 void ConsoleTest (const char *in, const char *out)
 {
   char ch;
-
+  printf ("Pour quitter, appuyez sur Ctrl+D\n\n");
   readAvail = new Semaphore ("read avail", 0);
   writeDone = new Semaphore ("write done", 0);
   console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
@@ -113,16 +117,24 @@ void ConsoleTest (const char *in, const char *out)
   {
     readAvail->P ();	// wait for character to arrive
     ch = console->GetChar ();
+
     #ifdef CHANGED
+
     echoChar(console, ch);
+
     #else
+
     console->PutChar (ch);	// echo it!
     writeDone->P ();	// wait for write to finish
+
     #endif // CHANGED
-    if (ch == 'q') {
+
+    if (ch == EOF) {
+
       #ifdef CHANGED
-      printf ("\nEnd of file.\n");
+      printf ("\nAu revoir.\n\n");
       #endif // CHANGED
+
       break;		// if q, quit
     }
   }
