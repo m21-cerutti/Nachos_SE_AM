@@ -117,6 +117,9 @@ main (int argc, char **argv)
     if (!strcmp (*argv, "-x"))
     {			// run a user program
       ASSERT (argc > 1);
+      #ifdef CHANGED
+      PutChar putChar = new PutChar(NULL, NULL);
+      #endif // CHANGED
       StartProcess (*(argv + 1));
       argCount = 2;
     }
@@ -132,7 +135,7 @@ main (int argc, char **argv)
       }
     }
     else if (!strcmp (*argv, "-sc"))
-    {			// test the synchronised console
+    {			// test the synchronized console
       if (argc == 1)
       SynchConsoleTest (NULL, NULL);
       else
@@ -187,7 +190,9 @@ main (int argc, char **argv)
     }
     #endif // NETWORK
   }
-
+  #ifdef CHANGED
+  Cleanup();
+  #endif // CHANGED
   currentThread->Finish ();	// NOTE: if the procedure "main"
   // returns, then the program "nachos"
   // will exit (as any other normal program

@@ -11,7 +11,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "console.h"
-#include "synchconsole.h"
+#include "synchconsole.h" //les consignes mettent des chevrons <synchconsole.h>
 #include "addrspace.h"
 #include "synch.h"
 
