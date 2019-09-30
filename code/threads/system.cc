@@ -11,11 +11,6 @@
 #ifdef __GLIBC__
 #include <malloc.h>
 #endif
-#ifdef CHANGED
-#ifdef USER_PROGRAM
-SynchConsole *synchconsole;
-#endif // USER_PROGRAM
-#endif // CHANGED
 
 // This defines *all* of the global data structures used by Nachos.
 // These are all initialized and de-allocated by this file.
@@ -26,7 +21,13 @@ Scheduler *scheduler;		// the ready list
 Interrupt *interrupt;		// interrupt status
 Statistics *stats;		// performance metrics
 Timer *timer;			// the hardware timer device,
-					// for invoking context switches
+// for invoking context switches
+
+#ifdef CHANGED
+#ifdef USER_PROGRAM
+SynchConsole *synchconsole;
+#endif // USER_PROGRAM
+#endif // CHANGED
 
 #ifdef FILESYS_NEEDED
 FileSystem *fileSystem;
@@ -69,9 +70,9 @@ extern void Cleanup ();
 static void
 TimerInterruptHandler (void *dummy)
 {
-    (void) dummy;
-    if (interrupt->getStatus () != IdleMode)
-	interrupt->YieldOnReturn ();
+  (void) dummy;
+  if (interrupt->getStatus () != IdleMode)
+  interrupt->YieldOnReturn ();
 }
 
 //----------------------------------------------------------------------
@@ -87,115 +88,115 @@ TimerInterruptHandler (void *dummy)
 void
 Initialize (int argc, char **argv)
 {
-    int argCount;
-    const char *debugArgs = "";
-    bool randomYield = FALSE;
+  int argCount;
+  const char *debugArgs = "";
+  bool randomYield = FALSE;
 
-#ifdef USER_PROGRAM
-    bool debugUserProg = FALSE;	// single step user program
-#endif
-#ifdef FILESYS_NEEDED
-    bool format = FALSE;	// format disk
-#endif
-#ifdef NETWORK
-    double rely = 1;		// network reliability
-    int netname = 0;		// UNIX socket name
-#endif
+  #ifdef USER_PROGRAM
+  bool debugUserProg = FALSE;	// single step user program
+  #endif
+  #ifdef FILESYS_NEEDED
+  bool format = FALSE;	// format disk
+  #endif
+  #ifdef NETWORK
+  double rely = 1;		// network reliability
+  int netname = 0;		// UNIX socket name
+  #endif
 
-    setlocale(LC_CTYPE,"");
+  setlocale(LC_CTYPE,"");
 
-#ifdef __GLIBC__
-#if (__GLIBC__ > 2) || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 4)
-    /* Make free() fill freed memory, to trap bad code */
-    mallopt(M_PERTURB, 0xfe);
-#endif
-#endif
+  #ifdef __GLIBC__
+  #if (__GLIBC__ > 2) || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 4)
+  /* Make free() fill freed memory, to trap bad code */
+  mallopt(M_PERTURB, 0xfe);
+  #endif
+  #endif
 
-    for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
+  for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
+  {
+    argCount = 1;
+    if (!strcmp (*argv, "-d"))
+    {
+      if (argc == 1)
+      debugArgs = "+";	// turn on all debug flags
+      else
       {
-	  argCount = 1;
-	  if (!strcmp (*argv, "-d"))
-	    {
-		if (argc == 1)
-		    debugArgs = "+";	// turn on all debug flags
-		else
-		  {
-		      debugArgs = *(argv + 1);
-		      argCount = 2;
-		  }
-	    }
-	  else if (!strcmp (*argv, "-rs"))
-	    {
-		int seed;
-		ASSERT (argc > 1);
-		seed = atoi (*(argv + 1));
-		if (seed == 0)
-		  {
-		    fprintf(stderr,"-rs option needs a seed value\n");
-		    exit(EXIT_FAILURE);
-		  }
-		RandomInit (seed);	// initialize pseudo-random
-		// number generator
-		randomYield = TRUE;
-		argCount = 2;
-	    }
-#ifdef USER_PROGRAM
-	  if (!strcmp (*argv, "-s"))
-	      debugUserProg = TRUE;
-#endif
-#ifdef FILESYS_NEEDED
-	  if (!strcmp (*argv, "-f"))
-	      format = TRUE;
-#endif
-#ifdef NETWORK
-	  if (!strcmp (*argv, "-l"))
-	    {
-		ASSERT (argc > 1);
-		rely = atof (*(argv + 1));
-		argCount = 2;
-	    }
-	  else if (!strcmp (*argv, "-m"))
-	    {
-		ASSERT (argc > 1);
-		netname = atoi (*(argv + 1));
-		argCount = 2;
-	    }
-#endif
+        debugArgs = *(argv + 1);
+        argCount = 2;
       }
+    }
+    else if (!strcmp (*argv, "-rs"))
+    {
+      int seed;
+      ASSERT (argc > 1);
+      seed = atoi (*(argv + 1));
+      if (seed == 0)
+      {
+        fprintf(stderr,"-rs option needs a seed value\n");
+        exit(EXIT_FAILURE);
+      }
+      RandomInit (seed);	// initialize pseudo-random
+      // number generatconsole = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);or
+      randomYield = TRUE;
+      argCount = 2;
+    }
+    #ifdef USER_PROGRAM
+    if (!strcmp (*argv, "-s"))
+    debugUserProg = TRUE;
+    #endif
+    #ifdef FILESYS_NEEDED
+    if (!strcmp (*argv, "-f"))
+    format = TRUE;
+    #endif
+    #ifdef NETWORK
+    if (!strcmp (*argv, "-l"))
+    {
+      ASSERT (argc > 1);
+      rely = atof (*(argv + 1));
+      argCount = 2;
+    }
+    else if (!strcmp (*argv, "-m"))
+    {
+      ASSERT (argc > 1);
+      netname = atoi (*(argv + 1));
+      argCount = 2;
+    }
+    #endif
+  }
 
-    DebugInit (debugArgs);	// initialize DEBUG messages
-    stats = new Statistics ();	// collect statistics
-    interrupt = new Interrupt;	// start up interrupt handling
-    scheduler = new Scheduler ();	// initialize the ready queue
-    if (randomYield)		// start the timer (if needed)
-	timer = new Timer (TimerInterruptHandler, 0, randomYield);
+  DebugInit (debugArgs);	// initialize DEBUG messages
+  stats = new Statistics ();	// collect statistics
+  interrupt = new Interrupt;	// start up interrupt handling
+  scheduler = new Scheduler ();	// initialize the ready queue
+  if (randomYield)		// start the timer (if needed)
+  timer = new Timer (TimerInterruptHandler, 0, randomYield);
 
-    threadToBeDestroyed = NULL;
+  threadToBeDestroyed = NULL;
 
-    // We didn't explicitly allocate the current thread we are running in.
-    // But if it ever tries to give up the CPU, we better have a Thread
-    // object to save its state.
-    currentThread = new Thread ("main");
-    currentThread->setStatus (RUNNING);
+  // We didn't explicitly allocate the current thread we are running in.
+  // But if it ever tries to give up the CPU, we better have a Thread
+  // object to save its state.
+  currentThread = new Thread ("main");
+  currentThread->setStatus (RUNNING);
 
-    interrupt->Enable ();
-    CallOnUserAbort (Cleanup);	// if user hits ctl-C
+  interrupt->Enable ();
+  CallOnUserAbort (Cleanup);	// if user hits ctl-C
 
-#ifdef USER_PROGRAM
-    machine = new Machine (debugUserProg);	// this must come first
-#endif
+  #ifdef USER_PROGRAM
+  machine = new Machine (debugUserProg);	// this must come first
+  #endif
 
-#ifdef FILESYS
-    synchDisk = new SynchDisk ("DISK");
-#endif
+  #ifdef FILESYS
+  synchDisk = new SynchDisk ("DISK");
+  #endif
 
-#ifdef FILESYS_NEEDED
-    fileSystem = new FileSystem (format);
-#endif
+  #ifdef FILESYS_NEEDED
+  fileSystem = new FileSystem (format);
+  #endif
 
-#ifdef NETWORK
-    postOffice = new PostOffice (netname, rely, 10);
-#endif
+  #ifdef NETWORK
+  postOffice = new PostOffice (netname, rely, 10);
+  #endif
 }
 
 //----------------------------------------------------------------------
@@ -205,40 +206,55 @@ Initialize (int argc, char **argv)
 void
 Cleanup ()
 {
-    printf ("\nCleaning up...\n");
-    /* Allow more interrupts but prevent other threads from continuing to use
-     * the system while we are waiting for the last interrupts */
-    scheduler->Halt();
-    interrupt->Enable();
+  printf ("\nCleaning up...\n");
+  /* Allow more interrupts but prevent other threads from continuing to use
+  * the system while we are waiting for the last interrupts */
+  scheduler->Halt();
+  interrupt->Enable();
 
-#ifdef NETWORK
-    delete postOffice;
-    postOffice = NULL;
-#endif
+  #ifdef NETWORK
+  delete postOffice;
+  postOffice = NULL;
+  #endif
 
-#ifdef USER_PROGRAM
-    delete machine;
-    machine = NULL;
-#endif
+  #ifdef USER_PROGRAM
 
-#ifdef FILESYS_NEEDED
-    delete fileSystem;
-    fileSystem = NULL;
-#endif
+  #ifdef CHANGED
+  delete synchconsole;
+  #endif // CHANGED
 
-#ifdef FILESYS
-    delete synchDisk;
-    synchDisk = NULL;
-#endif
+  #ifdef CHANGED
+  int exit_code = (int) machine->ReadRegister(4);
+  #endif // CHANGED
 
-    delete timer;
-    timer = NULL;
-    delete scheduler;
-    scheduler = NULL;
-    delete interrupt;
-    interrupt = NULL;
-    delete stats;
-    stats = NULL;
+  delete machine;
+  machine = NULL;
+  #endif
 
-    Exit (0);
+  #ifdef FILESYS_NEEDED
+  delete fileSystem;
+  fileSystem = NULL;
+  #endif
+
+  #ifdef FILESYS
+  delete synchDisk;
+  synchDisk = NULL;
+  #endif
+
+  delete timer;
+  timer = NULL;
+  delete scheduler;
+  scheduler = NULL;
+  delete interrupt;
+  interrupt = NULL;
+  delete stats;
+  stats = NULL;
+
+  #ifdef USER_PROGRAM
+  #ifdef CHANGED
+  Exit (exit_code);
+  #endif // CHANGED
+  #endif // USER_PROGRAM
+
+  Exit (0);
 }

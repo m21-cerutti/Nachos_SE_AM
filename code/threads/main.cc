@@ -74,6 +74,7 @@ main (int argc, char **argv)
       "-z prints the copyright message\n"
       "-h prints some help about options\n"
       "\n"
+
       #ifdef USER_PROGRAM
       "USER_PROGRAM\n"
       "-s causes user programs to be executed in single-step mode\n"
@@ -81,6 +82,7 @@ main (int argc, char **argv)
       "-c tests the console\n"
       "-sc tests the synchronised console\n"
       #endif
+
       #ifdef FILESYS
       "FILESYS\n"
       "-f causes the physical disk to be formatted\n"
@@ -113,13 +115,16 @@ main (int argc, char **argv)
     argCount = 1;
     if (!strcmp (*argv, "-z"))	// print copyright
     printf ("%s", copyright);
+
     #ifdef USER_PROGRAM
     if (!strcmp (*argv, "-x"))
     {			// run a user program
       ASSERT (argc > 1);
+
       #ifdef CHANGED
-      PutChar putChar = new PutChar(NULL, NULL);
+      synchconsole = new SynchConsole(NULL, NULL);
       #endif // CHANGED
+
       StartProcess (*(argv + 1));
       argCount = 2;
     }
@@ -134,6 +139,7 @@ main (int argc, char **argv)
         argCount = 3;
       }
     }
+    #ifdef CHANGED
     else if (!strcmp (*argv, "-sc"))
     {			// test the synchronized console
       if (argc == 1)
@@ -145,7 +151,9 @@ main (int argc, char **argv)
         argCount = 3;
       }
     }
+    #endif //CHANGED
     #endif // USER_PROGRAM
+
     #ifdef FILESYS
     if (!strcmp (*argv, "-cp"))
     {			// copy from UNIX to Nachos
@@ -190,9 +198,11 @@ main (int argc, char **argv)
     }
     #endif // NETWORK
   }
+  /*
   #ifdef CHANGED
   Cleanup();
   #endif // CHANGED
+  */
   currentThread->Finish ();	// NOTE: if the procedure "main"
   // returns, then the program "nachos"
   // will exit (as any other normal program

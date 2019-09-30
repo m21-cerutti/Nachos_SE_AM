@@ -3,16 +3,21 @@
 void print(char c, int n)
 {
   int i;
-  #if 0
+
+  #if CHANGED
+
   for (i = 0; i < n; i++) {
   PutChar(c + i);
   }
   PutChar('\n');
-  #endif
+
+  #endif // CHANGED
 }
 
 int main()
 {
+  //Exit(1); Work like expected
   print('a',4);
-  Halt();
+  //Halt();
+  return 1; //Not working
 }

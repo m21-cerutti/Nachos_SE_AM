@@ -135,7 +135,9 @@ void Fork (void (*func) ());
 void Yield ();
 
 #ifdef CHANGED
+
 void PutChar(char c);
+
 #endif // CHANGED
 
 #endif // IN_USER_MODE

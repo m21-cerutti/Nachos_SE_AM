@@ -11,7 +11,11 @@
 #include "copyright.h"
 #include "system.h"
 #include "console.h"
+
+#ifdef CHANGED
 #include "synchconsole.h" //les consignes mettent des chevrons <synchconsole.h>
+#endif //CHANGED
+
 #include "addrspace.h"
 #include "synch.h"
 
