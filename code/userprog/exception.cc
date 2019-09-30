@@ -99,7 +99,7 @@ ExceptionHandler (ExceptionType which)
 
       case SC_Exit:
       {
-        //TODO How to ge exit code ?
+        //TODO Bad return for main
         int exit_code = (int) machine->ReadRegister(4);
         printf("\nExit with EXIT_CODE %d\n", exit_code);
         interrupt->Halt ();

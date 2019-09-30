@@ -250,11 +250,5 @@ Cleanup ()
   delete stats;
   stats = NULL;
 
-  #ifdef USER_PROGRAM
-  #ifdef CHANGED
-  Exit (exit_code);
-  #endif // CHANGED
-  #endif // USER_PROGRAM
-
   Exit (0);
 }
