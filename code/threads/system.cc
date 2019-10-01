@@ -23,12 +23,6 @@ Statistics *stats;		// performance metrics
 Timer *timer;			// the hardware timer device,
 // for invoking context switches
 
-#ifdef CHANGED
-#ifdef USER_PROGRAM
-SynchConsole *synchconsole;
-#endif // USER_PROGRAM
-#endif // CHANGED
-
 #ifdef FILESYS_NEEDED
 FileSystem *fileSystem;
 #endif
@@ -39,6 +33,28 @@ SynchDisk *synchDisk;
 
 #ifdef USER_PROGRAM		// requires either FILESYS or FILESYS_STUB
 Machine *machine;		// user program memory and registers
+
+#ifdef CHANGED
+SynchConsole *synchconsole;
+#endif // CHANGED
+
+#ifdef CHANGED
+//TODO TO test
+int copyStringFromMachine(int from, char* to, unsigned size)
+{
+  int i = 0;
+  int mem;
+  while (i < (int)size-1 && (char)mem != '\0')
+  {
+    machine->ReadMem( from, size, &mem);
+    to[i] = (char)mem;
+    i++;
+  }
+  to[i] = '\0';
+  return i;
+}
+#endif // CHANGED
+
 #endif
 
 #ifdef NETWORK

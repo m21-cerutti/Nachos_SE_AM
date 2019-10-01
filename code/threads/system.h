@@ -34,6 +34,15 @@ extern Timer *timer;		// the hardware alarm clock
 extern Machine *machine;	// user program memory and registers
 
 #ifdef CHANGED
+
+#define SIZE_MAX_BUFFER 1024
+//TODO Initialyse buffer;
+char* bufferSystem;
+int copyStringFromMachine(int from, char* to, unsigned size);
+
+#endif // CHANGED
+
+#ifdef CHANGED
 #include "synchconsole.h"
 extern SynchConsole* synchconsole;
 #endif // CHANGED

@@ -87,8 +87,8 @@ ExceptionHandler (ExceptionType which)
 
     case SC_PutChar:
       {
-  		  DEBUG ('s', "Putchar, initiated by user program.\n");
         char c = (char) machine->ReadRegister (4);
+  		  DEBUG ('s', "Put a char %c, initiated by user program.\n", c);
         synchconsole->SynchPutChar(c);
         break;
       }
@@ -99,10 +99,24 @@ ExceptionHandler (ExceptionType which)
 
       case SC_Exit:
       {
-        //TODO Bad return for main
         int exit_code = (int) machine->ReadRegister(4);
         printf("\nExit with EXIT_CODE %d\n", exit_code);
+        DEBUG ('s', "Exit with code %d and shutdown, initiated by user program.\n", exit_code);
         interrupt->Halt ();
+        break;
+      }
+
+      #endif // CHANGED
+
+      #ifdef CHANGED
+
+      case SC_PutString:
+      {
+        //TODO return number character written
+        int addrStr = (int) machine->ReadRegister (4);
+  		  DEBUG ('s', "Put a string %s, initiated by user program.\n", s);
+        int charWritten = copyStringFromMachine(addrStr, bufferSystem, SIZE_MAX_BUFFER);
+        synchconsole->SynchPutString(buffer);
         break;
       }
 

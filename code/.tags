@@ -1143,19 +1143,6 @@ A	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NAC
 B	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/matmult.c	/^int B[Dim][Dim];$/;"	variable	line:17
 C	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/matmult.c	/^int C[Dim][Dim];$/;"	variable	line:18
 main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/matmult.c	/^main ()$/;"	function	line:21
-__start	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^__start:$/;"	label	line:34
-Halt	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Halt:$/;"	label	line:63
-Exit	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Exit:$/;"	label	line:71
-Exec	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Exec:$/;"	label	line:79
-Join	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Join:$/;"	label	line:87
-Create	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Create:$/;"	label	line:95
-Open	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Open:$/;"	label	line:103
-Read	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Read:$/;"	label	line:111
-Write	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Write:$/;"	label	line:119
-Close	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Close:$/;"	label	line:127
-Fork	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Fork:$/;"	label	line:135
-Yield	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Yield:$/;"	label	line:143
-__main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^__main:$/;"	label	line:152
 BitsInByte	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/bitmap.cc	/^#define BitsInByte /;"	macro	line:13	file:
 BitsInWord	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/bitmap.cc	/^#define BitsInWord /;"	macro	line:14	file:
 BitMap	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/bitmap.cc	/^BitMap::BitMap (int nitems)$/;"	function	line:24	class:BitMap	signature:(int nitems)
@@ -1196,24 +1183,6 @@ DEFINES	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitati
 INCPATH	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/Makefile	/^INCPATH = -I..\/bin -I..\/filesys -I..\/userprog -I..\/threads -I..\/machine$/;"	macro	line:13
 C_OFILES	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/Makefile	/^C_OFILES = $(THREAD_O) $(USERPROG_O)$/;"	macro	line:14
 main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/halt.c	/^main ()$/;"	function	line:16
-SYSCALLS_H	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SYSCALLS_H$/;"	macro	line:14
-USER_START_ADDRESS	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define USER_START_ADDRESS /;"	macro	line:18
-SC_Halt	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Halt	/;"	macro	line:23
-SC_Exit	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Exit	/;"	macro	line:24
-SC_Exec	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Exec	/;"	macro	line:25
-SC_Join	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Join	/;"	macro	line:26
-SC_Create	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Create	/;"	macro	line:27
-SC_Open	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Open	/;"	macro	line:28
-SC_Read	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Read	/;"	macro	line:29
-SC_Write	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Write	/;"	macro	line:30
-SC_Close	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Close	/;"	macro	line:31
-SC_Fork	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Fork	/;"	macro	line:32
-SC_Yield	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Yield	/;"	macro	line:33
-SC_PutChar	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_PutChar /;"	macro	line:35
-SpaceId	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^typedef int SpaceId;$/;"	typedef	line:65
-OpenFileId	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^typedef int OpenFileId;$/;"	typedef	line:88
-ConsoleInput	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define ConsoleInput	/;"	macro	line:96
-ConsoleOutput	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define ConsoleOutput	/;"	macro	line:97
 StartProcess	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/progtest.cc	/^StartProcess (char *filename)$/;"	function	line:29	signature:(char *filename)
 console	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/progtest.cc	/^static Console *console;$/;"	variable	line:60	file:
 readAvail	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/progtest.cc	/^static Semaphore *readAvail;$/;"	variable	line:61	file:
@@ -1223,7 +1192,6 @@ WriteDoneHandler	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_E
 echoChar	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/progtest.cc	/^void echoChar(Console* cons, const char ch)$/;"	function	line:90	signature:(Console* cons, const char ch)
 ConsoleTest	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/progtest.cc	/^void ConsoleTest (const char *in, const char *out)$/;"	function	line:112	signature:(const char *in, const char *out)
 SynchConsoleTest	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/progtest.cc	/^void SynchConsoleTest (const char* in, const char* out)$/;"	function	line:152	signature:(const char* in, const char* out)
-SYSTEM_H	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.h	/^#define SYSTEM_H$/;"	macro	line:9
 MAIN	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/main.cc	/^#define MAIN$/;"	macro	line:15	file:
 MAIN	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/main.cc	/^#undef MAIN$/;"	macro	line:17	file:
 main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/main.cc	/^main (int argc, char **argv)$/;"	function	line:48	signature:(int argc, char **argv)
@@ -1237,21 +1205,62 @@ SynchPutChar	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Explo
 SynchGetChar	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/synchconsole.cc	/^int SynchConsole::SynchGetChar()$/;"	function	line:34	class:SynchConsole	signature:()
 SynchPutString	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/synchconsole.cc	/^void SynchConsole::SynchPutString(const char s[])$/;"	function	line:40	class:SynchConsole	signature:(const char s[])
 SynchGetString	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/synchconsole.cc	/^void SynchConsole::SynchGetString(char* s, int n)$/;"	function	line:50	class:SynchConsole	signature:(char* s, int n)
-UpdatePC	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/exception.cc	/^UpdatePC ()$/;"	function	line:34	file:	signature:()
-ExceptionHandler	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/exception.cc	/^ExceptionHandler (ExceptionType which)$/;"	function	line:69	signature:(ExceptionType which)
 print	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/putchar.c	/^void print(char c, int n)$/;"	function	line:3	signature:(char c, int n)
 main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/putchar.c	/^int main()$/;"	function	line:17
+main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/exit.c	/^int main()$/;"	function	line:5
+main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/exit_main.c	/^int main()$/;"	function	line:5
+SYSCALLS_H	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SYSCALLS_H$/;"	macro	line:14
+USER_START_ADDRESS	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define USER_START_ADDRESS /;"	macro	line:18
+SC_Halt	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Halt	/;"	macro	line:23
+SC_Exit	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Exit	/;"	macro	line:24
+SC_Exec	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Exec	/;"	macro	line:25
+SC_Join	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Join	/;"	macro	line:26
+SC_Create	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Create	/;"	macro	line:27
+SC_Open	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Open	/;"	macro	line:28
+SC_Read	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Read	/;"	macro	line:29
+SC_Write	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Write	/;"	macro	line:30
+SC_Close	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Close	/;"	macro	line:31
+SC_Fork	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Fork	/;"	macro	line:32
+SC_Yield	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_Yield	/;"	macro	line:33
+SC_PutChar	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_PutChar /;"	macro	line:36
+SC_PutString	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define SC_PutString /;"	macro	line:37
+SpaceId	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^typedef int SpaceId;$/;"	typedef	line:67
+OpenFileId	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^typedef int OpenFileId;$/;"	typedef	line:90
+ConsoleInput	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define ConsoleInput	/;"	macro	line:98
+ConsoleOutput	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/syscall.h	/^#define ConsoleOutput	/;"	macro	line:99
+__start	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^__start:$/;"	label	line:34
+Halt	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Halt:$/;"	label	line:67
+Exit	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Exit:$/;"	label	line:75
+Exec	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Exec:$/;"	label	line:83
+Join	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Join:$/;"	label	line:91
+Create	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Create:$/;"	label	line:99
+Open	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Open:$/;"	label	line:107
+Read	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Read:$/;"	label	line:115
+Write	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Write:$/;"	label	line:123
+Close	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Close:$/;"	label	line:131
+Fork	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Fork:$/;"	label	line:139
+Yield	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^Yield:$/;"	label	line:147
+PutChar	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^PutChar:$/;"	label	line:157
+PutString	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^PutString:$/;"	label	line:169
+__main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/start.S	/^__main:$/;"	label	line:180
+UpdatePC	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/exception.cc	/^UpdatePC ()$/;"	function	line:34	file:	signature:()
+ExceptionHandler	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/userprog/exception.cc	/^ExceptionHandler (ExceptionType which)$/;"	function	line:69	signature:(ExceptionType which)
+main	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/test/putstring.c	/^int main()$/;"	function	line:5
+SYSTEM_H	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.h	/^#define SYSTEM_H$/;"	macro	line:9
+SIZE_MAX_BUFFER	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.h	/^#define SIZE_MAX_BUFFER /;"	macro	line:38
+bufferSystem	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.h	/^char* bufferSystem;$/;"	variable	line:40
 currentThread	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Thread *currentThread;		\/\/ the thread we are running now$/;"	variable	line:18
 threadToBeDestroyed	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Thread *threadToBeDestroyed;	\/\/ the thread that just finished$/;"	variable	line:19
 scheduler	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Scheduler *scheduler;		\/\/ the ready list$/;"	variable	line:20
 interrupt	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Interrupt *interrupt;		\/\/ interrupt status$/;"	variable	line:21
 stats	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Statistics *stats;		\/\/ performance metrics$/;"	variable	line:22
 timer	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Timer *timer;			\/\/ the hardware timer device,$/;"	variable	line:23
-synchconsole	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^SynchConsole *synchconsole;$/;"	variable	line:28
-fileSystem	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^FileSystem *fileSystem;$/;"	variable	line:33
-synchDisk	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^SynchDisk *synchDisk;$/;"	variable	line:37
-machine	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Machine *machine;		\/\/ user program memory and registers$/;"	variable	line:41
-postOffice	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^PostOffice *postOffice;$/;"	variable	line:45
-TimerInterruptHandler	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^TimerInterruptHandler (void *dummy)$/;"	function	line:71	file:	signature:(void *dummy)
-Initialize	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Initialize (int argc, char **argv)$/;"	function	line:89	signature:(int argc, char **argv)
-Cleanup	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Cleanup ()$/;"	function	line:207	signature:()
+fileSystem	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^FileSystem *fileSystem;$/;"	variable	line:27
+synchDisk	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^SynchDisk *synchDisk;$/;"	variable	line:31
+machine	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Machine *machine;		\/\/ user program memory and registers$/;"	variable	line:35
+synchconsole	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^SynchConsole *synchconsole;$/;"	variable	line:38
+copyStringFromMachine	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^int copyStringFromMachine(int from, char* to, unsigned size)$/;"	function	line:43	signature:(int from, char* to, unsigned size)
+postOffice	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^PostOffice *postOffice;$/;"	variable	line:61
+TimerInterruptHandler	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^TimerInterruptHandler (void *dummy)$/;"	function	line:87	file:	signature:(void *dummy)
+Initialize	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Initialize (int argc, char **argv)$/;"	function	line:105	signature:(int argc, char **argv)
+Cleanup	/net/cremi/mcerutti/espaces/travail/Master/Semestre 7/Systeme_Exploitation/NACHOS/svnnachos/nachos/code/threads/system.cc	/^Cleanup ()$/;"	function	line:223	signature:()

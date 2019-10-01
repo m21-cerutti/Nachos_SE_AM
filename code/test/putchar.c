@@ -16,8 +16,6 @@ void print(char c, int n)
 
 int main()
 {
-  //Exit(1); //Work like expected
   print('a',4);
-  //Halt();
-  return 2500; //Not working
+  Halt();
 }
