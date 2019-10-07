@@ -44,8 +44,7 @@ extern void MailTest (int networkID);
 //              ex: "nachos -d +" -> argv = {"nachos", "-d", "+"}
 //----------------------------------------------------------------------
 
-int
-main (int argc, char **argv)
+int main (int argc, char **argv)
 {
   int argCount;		// the number of arguments
   // for a particular command

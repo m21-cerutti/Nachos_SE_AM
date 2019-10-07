@@ -39,14 +39,16 @@ SynchConsole *synchconsole;
 #endif // CHANGED
 
 #ifdef CHANGED
-//TODO TO test
+
+int SIZE_BUFFER;
+char* bufferSystem;
+
 int copyStringFromMachine(int from, char* to, unsigned size)
 {
   int i = 0;
   int mem;
-  while (i < (int)size-1 && (char)mem != '\0')
+  while (i < (int)size-1 && machine->ReadMem(from + i, 1, &mem) && (char)mem != '\0')
   {
-    machine->ReadMem( from, size, &mem);
     to[i] = (char)mem;
     i++;
   }
@@ -200,6 +202,12 @@ Initialize (int argc, char **argv)
 
   #ifdef USER_PROGRAM
   machine = new Machine (debugUserProg);	// this must come first
+
+  #if CHANGED
+  SIZE_BUFFER = SIZE_BUFFER_DEFAULT;
+  bufferSystem = new char[SIZE_BUFFER];
+  #endif // CHANGED
+
   #endif
 
   #ifdef FILESYS
@@ -245,6 +253,12 @@ Cleanup ()
 
   delete machine;
   machine = NULL;
+
+  #if CHANGED
+  delete bufferSystem;
+  bufferSystem = NULL;
+  #endif // CHANGED
+
   #endif
 
   #ifdef FILESYS_NEEDED

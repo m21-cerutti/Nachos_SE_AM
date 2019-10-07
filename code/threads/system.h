@@ -35,9 +35,11 @@ extern Machine *machine;	// user program memory and registers
 
 #ifdef CHANGED
 
+#define SIZE_BUFFER_DEFAULT 512
 #define SIZE_MAX_BUFFER 1024
-//TODO Initialyse buffer;
-char* bufferSystem;
+
+extern int SIZE_BUFFER;
+extern char* bufferSystem;
 int copyStringFromMachine(int from, char* to, unsigned size);
 
 #endif // CHANGED

@@ -4,9 +4,9 @@
 
 int main()
 {
-  PutString("Hello world!");
-  char question[]= "How are you ?";
-  PutString(question);
+  PutString("Hello world!\n");
+  PutString("How are you ?");
+
   return 0;
 }
 

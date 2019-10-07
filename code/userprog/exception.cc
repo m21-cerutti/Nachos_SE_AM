@@ -113,10 +113,25 @@ ExceptionHandler (ExceptionType which)
       case SC_PutString:
       {
         //TODO return number character written
-        int addrStr = (int) machine->ReadRegister (4);
-  		  DEBUG ('s', "Put a string %s, initiated by user program.\n", s);
-        int charWritten = copyStringFromMachine(addrStr, bufferSystem, SIZE_MAX_BUFFER);
-        synchconsole->SynchPutString(buffer);
+        int str = (int) machine->ReadRegister (4);
+  		  DEBUG ('s', "Put a string %s, initiated by user program.\n", str);
+        int charWritten = copyStringFromMachine(str, bufferSystem, SIZE_BUFFER);
+
+        while( charWritten == SIZE_BUFFER-1 && SIZE_BUFFER < SIZE_MAX_BUFFER)
+        {
+          printf("Buffer overflow with size %d, increase of the buffer.\n", SIZE_BUFFER);
+          SIZE_BUFFER = SIZE_BUFFER * 2;
+          delete bufferSystem;
+          bufferSystem = new char[SIZE_BUFFER];
+          charWritten = copyStringFromMachine(str, bufferSystem, SIZE_BUFFER);
+        }
+        if(SIZE_BUFFER == SIZE_MAX_BUFFER)
+        {
+          printf("Buffer overflow, exceed limit %d\n", SIZE_MAX_BUFFER);
+          ASSERT(FALSE);
+        }
+  		  DEBUG ('s', "%d character written.\n", charWritten);
+        synchconsole->SynchPutString(bufferSystem);
         break;
       }
 
