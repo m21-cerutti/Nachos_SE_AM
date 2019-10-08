@@ -47,7 +47,12 @@ StartProcess (char *filename)
   space->InitRegisters ();	// set the initial register values
   space->RestoreState ();	// load page table register
 
+  #ifdef CHANGED
+  // Non initialised variable make errors with debug memory.
   machine->DumpMem ("memory.svg");
+  #else
+  machine->DumpMem ("memory.svg");
+  #endif //CHANGED
   machine->Run ();		// jump to the user progam
   ASSERT (FALSE);		// machine->Run never returns;
   // the address space exits

@@ -35,6 +35,7 @@
 #ifdef CHANGED
 #define SC_PutChar    11
 #define SC_PutString  12
+#define SC_GetChar    13
 #endif // CHANGED
 
 
@@ -145,6 +146,8 @@ void PutChar(char c);
 #ifdef CHANGED
 
 void PutString(char* c);
+
+char GetChar();
 
 #endif // CHANGED
 

@@ -112,26 +112,30 @@ ExceptionHandler (ExceptionType which)
 
       case SC_PutString:
       {
-        //TODO return number character written
         int str = (int) machine->ReadRegister (4);
   		  DEBUG ('s', "Put a string %s, initiated by user program.\n", str);
-        int charWritten = copyStringFromMachine(str, bufferSystem, SIZE_BUFFER);
+        int totalWritten = 0;
+        int charWritten = MAX_STRING_SIZE-1;
+        while( charWritten == MAX_STRING_SIZE-1)
+        {
+          charWritten = copyStringFromMachine(str+totalWritten, bufferSystem, MAX_STRING_SIZE);
+    		  DEBUG ('s', "%d character written.\n", charWritten);
+          synchconsole->SynchPutString(bufferSystem);
+          totalWritten += charWritten;
+        }
+  		  DEBUG ('s', "%d character written total.\n", totalWritten);
+        break;
+      }
 
-        while( charWritten == SIZE_BUFFER-1 && SIZE_BUFFER < SIZE_MAX_BUFFER)
-        {
-          printf("Buffer overflow with size %d, increase of the buffer.\n", SIZE_BUFFER);
-          SIZE_BUFFER = SIZE_BUFFER * 2;
-          delete bufferSystem;
-          bufferSystem = new char[SIZE_BUFFER];
-          charWritten = copyStringFromMachine(str, bufferSystem, SIZE_BUFFER);
-        }
-        if(SIZE_BUFFER == SIZE_MAX_BUFFER)
-        {
-          printf("Buffer overflow, exceed limit %d\n", SIZE_MAX_BUFFER);
-          ASSERT(FALSE);
-        }
-  		  DEBUG ('s', "%d character written.\n", charWritten);
-        synchconsole->SynchPutString(bufferSystem);
+      #endif // CHANGED
+
+      #ifdef CHANGED
+
+      case SC_GetChar:
+      {
+        int str = synchconsole->SynchGetChar();
+  		  DEBUG ('s', "Get char \"%c\", initiated by user program.\n", str);
+        machine->WriteRegister(2, str);
         break;
       }
 
