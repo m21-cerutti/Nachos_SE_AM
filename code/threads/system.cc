@@ -40,7 +40,6 @@ SynchConsole *synchconsole;
 
 #ifdef CHANGED
 
-int SIZE_BUFFER;
 char* bufferSystem;
 
 int copyStringFromMachine(int from, char* to, unsigned size)
@@ -55,6 +54,19 @@ int copyStringFromMachine(int from, char* to, unsigned size)
   to[i] = '\0';
   return i;
 }
+
+int copyStringToMachine(char* from, int to, unsigned size)
+{
+  int i = 0;
+  while (i < (int)size-1 && *(from+i) != '\0' )
+  {
+    machine->WriteMem(to+i, 1, *(from + i));
+    i++;
+  }
+  machine->WriteMem(to + i, 1, '\0');
+  return i;
+}
+
 #endif // CHANGED
 
 #endif
@@ -204,8 +216,7 @@ Initialize (int argc, char **argv)
   machine = new Machine (debugUserProg);	// this must come first
 
   #if CHANGED
-  SIZE_BUFFER = SIZE_BUFFER_DEFAULT;
-  bufferSystem = new char[SIZE_BUFFER];
+  bufferSystem = new char[MAX_STRING_SIZE];
   #endif // CHANGED
 
   #endif
@@ -245,10 +256,6 @@ Cleanup ()
 
   #ifdef CHANGED
   delete synchconsole;
-  #endif // CHANGED
-
-  #ifdef CHANGED
-  int exit_code = (int) machine->ReadRegister(4);
   #endif // CHANGED
 
   delete machine;

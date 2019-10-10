@@ -93,49 +93,67 @@ ExceptionHandler (ExceptionType which)
         break;
       }
 
-      #endif // CHANGED
-
-      #ifdef CHANGED
-
       case SC_Exit:
       {
         int exit_code = (int) machine->ReadRegister(4);
-        printf("\nExit with EXIT_CODE %d\n", exit_code);
         DEBUG ('s', "Exit with code %d and shutdown, initiated by user program.\n", exit_code);
+        machine->WriteRegister(2, exit_code);
         interrupt->Halt ();
         break;
       }
 
-      #endif // CHANGED
-
-      #ifdef CHANGED
-
       case SC_PutString:
       {
         int str = (int) machine->ReadRegister (4);
-  		  DEBUG ('s', "Put a string %s, initiated by user program.\n", str);
+  		  DEBUG ('s', "Put a string, initiated by user program.\n");
         int totalWritten = 0;
-        int charWritten = MAX_STRING_SIZE-1;
-        while( charWritten == MAX_STRING_SIZE-1)
+        int nbWritten = MAX_STRING_SIZE-1;
+        while( nbWritten == MAX_STRING_SIZE-1)
         {
-          charWritten = copyStringFromMachine(str+totalWritten, bufferSystem, MAX_STRING_SIZE);
-    		  DEBUG ('s', "%d character written.\n", charWritten);
+          nbWritten = copyStringFromMachine(str+totalWritten, bufferSystem, MAX_STRING_SIZE);
+    		  DEBUG ('s', "%d character written.\n", nbWritten);
           synchconsole->SynchPutString(bufferSystem);
-          totalWritten += charWritten;
+          totalWritten += nbWritten;
         }
   		  DEBUG ('s', "%d character written total.\n", totalWritten);
         break;
       }
 
-      #endif // CHANGED
-
-      #ifdef CHANGED
-
       case SC_GetChar:
       {
         int str = synchconsole->SynchGetChar();
   		  DEBUG ('s', "Get char \"%c\", initiated by user program.\n", str);
-        machine->WriteRegister(2, str);
+        if(str == EOF){
+            machine->WriteRegister(2, '\0');
+            DEBUG('s', "End of file attend.\n");
+        }
+        else
+          machine->WriteRegister(2, str);
+        break;
+      }
+
+      case SC_GetString:
+      {
+        int addr = (int) machine->ReadRegister (4);
+        int size = (int) machine->ReadRegister (5);
+
+  		  DEBUG ('s', "Get string with size %d, initiated by user program.\n", size);
+        int totalread = 0;
+        int nbread = MAX_STRING_SIZE-1;
+        bufferSystem[nbread-1] = '\0';
+        while(nbread >= MAX_STRING_SIZE-1 && bufferSystem[nbread-1] != '\n')
+        {
+          int remain = (size - totalread);
+          int sizeBuffer = remain > MAX_STRING_SIZE ? MAX_STRING_SIZE : remain;
+
+          DEBUG('s', "Size buffer system used : %d\n", sizeBuffer);
+          synchconsole->SynchGetString(bufferSystem, sizeBuffer);
+          DEBUG ('s',"Buffer content <%s>\n", bufferSystem);
+          nbread = copyStringToMachine(bufferSystem, addr+totalread, sizeBuffer);
+          DEBUG ('s', "%d character read.\n", nbread);
+          totalread += nbread;
+        }
+        DEBUG ('s', "%d character read total.\n", totalread);
         break;
       }
 

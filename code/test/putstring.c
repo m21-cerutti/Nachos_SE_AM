@@ -1,5 +1,13 @@
 #if CHANGED
 
+/* putstring.c
+ *	Simple program to test the system call void PutString(char* s).
+ *
+ *	Put first on console "Hello world!\n", then on a second call "How are you ?".
+ *
+ * 	NOTE:
+ */
+
 #include "syscall.h"
 
 int main()

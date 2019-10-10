@@ -1,5 +1,13 @@
 #include "syscall.h"
 
+/* puchar.c
+ *	Simple program to test the system call void Puchar(char c).
+ *
+ *	Print the character 'a' and the 3 next characters with a loop. Then put an '\n' character.
+ *
+ */
+
+
 void print(char c, int n)
 {
   int i;

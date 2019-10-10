@@ -36,9 +36,11 @@ __start:
 
 #ifdef CHANGED
   move	$4,$2
+#else
+  move	$4,$0
 #endif // CHANGED
 
-	jal	Exit	 /* if we return from main, exit(0) */
+	jal	Exit	 /* if we return from main, exit(exit_code) */
 	.end __start
 
 /* -------------------------------------------------------------
@@ -172,6 +174,22 @@ PutString:
 	j	$31
 	.end PutString
 
+  .globl GetChar
+  .ent	GetChar
+GetChar:
+  addiu $2,$0,SC_GetChar
+	syscall
+	j	$31
+	.end GetChar
+
+  .globl GetString
+  .ent	GetString
+GetString:
+  addiu $2,$0,SC_GetString
+  syscall
+  j	$31
+  .end GetString
+
 #endif // CHANGED
 
 /* dummy function to keep gcc happy */
@@ -179,7 +197,4 @@ PutString:
         .ent    __main
 __main:
         j       $31
-#ifdef CHANGED
-        move	$4,$2
-#endif // CHANGED
         .end    __main
