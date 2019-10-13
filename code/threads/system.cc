@@ -256,6 +256,7 @@ Cleanup ()
 
   #ifdef CHANGED
   delete synchconsole;
+  synchconsole= NULL;
   #endif // CHANGED
 
   delete machine;

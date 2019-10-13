@@ -197,11 +197,7 @@ int main (int argc, char **argv)
     }
     #endif // NETWORK
   }
-  /*
-  #ifdef CHANGED
   Cleanup();
-  #endif // CHANGED
-  */
   currentThread->Finish ();	// NOTE: if the procedure "main"
   // returns, then the program "nachos"
   // will exit (as any other normal program

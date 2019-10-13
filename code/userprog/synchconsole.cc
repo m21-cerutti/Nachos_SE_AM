@@ -26,6 +26,7 @@ SynchConsole::~SynchConsole()
   delete console;
   delete writeDone;
   delete readAvail;
+  delete accessConsole;
 }
 
 void SynchConsole::SynchPutChar(int ch)
