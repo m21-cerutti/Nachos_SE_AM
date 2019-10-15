@@ -13,9 +13,7 @@
 
 int main()
 {
-  PutChar('a');
-  //Bug to end with return main not current variable
-  return 2500; //Test for return main, Exit with EXIT_CODE 2500
+  return 2500; //Test for "main"'s return value, Exit with EXIT_CODE 2500
 
 }
 

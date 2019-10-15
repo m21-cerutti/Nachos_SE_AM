@@ -17,6 +17,6 @@ main ()
 {
     Halt ();
 
-    /* not reached, to test*/
+    /* not reached, expected result */
     return 0;
 }

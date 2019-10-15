@@ -79,7 +79,9 @@ int main (int argc, char **argv)
       "-s causes user programs to be executed in single-step mode\n"
       "-x runs a user program\n"
       "-c tests the console\n"
+      #ifdef CHANGED
       "-sc tests the synchronised console\n"
+      #endif //CHANGED
       #endif
 
       #ifdef FILESYS
@@ -197,7 +199,6 @@ int main (int argc, char **argv)
     }
     #endif // NETWORK
   }
-  Cleanup();
   currentThread->Finish ();	// NOTE: if the procedure "main"
   // returns, then the program "nachos"
   // will exit (as any other normal program
@@ -206,5 +207,6 @@ int main (int argc, char **argv)
   // to those threads by saying that the
   // "main" thread is finished, preventing
   // it from returning.
+
   return (0);			// Not reached...
 }

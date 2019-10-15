@@ -1,4 +1,4 @@
-/* matmult.c 
+/* matmult.c
  *    Test program to do matrix multiplication on large arrays.
  *
  *    Intended to stress virtual memory system.
@@ -9,8 +9,8 @@
 
 #include "syscall.h"
 
-#define Dim 	20		/* sum total of the arrays doesn't fit in 
-				 * physical memory 
+#define Dim 	20		/* sum total of the arrays doesn't fit in
+				 * physical memory
 				 */
 
 int A[Dim][Dim];
@@ -22,7 +22,7 @@ main ()
 {
     int i, j, k;
 
-    for (i = 0; i < Dim; i++)	/* first initialize the matrices */
+    for (i = 0; i < Dim; i++)	/* first, initializing the matrices */
 	for (j = 0; j < Dim; j++)
 	  {
 	      A[i][j] = i;
