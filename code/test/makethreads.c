@@ -1,11 +1,11 @@
 #if CHANGED
 
 /* makethreads.c
- *	Resume
+ *	Simple function to test the creation and the deletetion of one thread.
  *
- *	Do
+ *	The child print a char 's' and then '\n', the father do an active wait.
  *
- * 	NOTE:
+ * 	NOTE: The program have an infinite loop, use ctrl-c to stop it.
  */
 
 #include "syscall.h"
@@ -27,11 +27,8 @@ int main()
   {
     return -1;
   }
-  PutChar('f');
-  PutChar('\n');
   while(1);
 
-  //printf("Father\n");
   return 0;
 }
 

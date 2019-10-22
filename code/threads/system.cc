@@ -40,6 +40,7 @@ SynchConsole *synchconsole;
 
 #ifdef CHANGED
 
+Semaphore* accessBuffer;
 char* bufferSystem;
 
 int copyStringFromMachine(int from, char* to, unsigned size)
@@ -216,6 +217,7 @@ Initialize (int argc, char **argv)
   machine = new Machine (debugUserProg);	// this must come first
 
   #if CHANGED
+  accessBuffer = new Semaphore("access buffer", 1);
   bufferSystem = new char[MAX_STRING_SIZE];
   #endif // CHANGED
 
@@ -265,6 +267,7 @@ Cleanup ()
   #if CHANGED
   delete bufferSystem;
   bufferSystem = NULL;
+  delete accessBuffer;
   #endif // CHANGED
 
   #endif

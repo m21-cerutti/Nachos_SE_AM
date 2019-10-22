@@ -108,6 +108,8 @@ ExceptionHandler (ExceptionType which)
       case SC_PutString:
       {
         int str = (int) machine->ReadRegister (4);
+
+        accessBuffer->P();
   		  DEBUG ('s', "Put a string, initiated by user program.\n");
         int totalWritten = 0;
         int nbWritten = MAX_STRING_SIZE-1;
@@ -119,6 +121,7 @@ ExceptionHandler (ExceptionType which)
           totalWritten += nbWritten;
         }
   		  DEBUG ('s', "%d character written total.\n", totalWritten);
+        accessBuffer->V();
         break;
       }
 
@@ -140,6 +143,7 @@ ExceptionHandler (ExceptionType which)
         int addr = (int) machine->ReadRegister (4);
         int size = (int) machine->ReadRegister (5);
 
+        accessBuffer->P();
   		  DEBUG ('s', "Get string with size %d, initiated by user program.\n", size);
         int totalread = 0;
         int nbread = MAX_STRING_SIZE-1;
@@ -157,6 +161,7 @@ ExceptionHandler (ExceptionType which)
           totalread += nbread;
         }
         DEBUG ('s', "%d character read total.\n", totalread);
+        accessBuffer->V();
         break;
       }
 
@@ -168,7 +173,7 @@ ExceptionHandler (ExceptionType which)
 
           int result = do_ThreadCreate(addr_f, addr_arg);
           DEBUG ('x', "Create new thread with result %d.\n", result);
-          
+
           machine->WriteRegister(2, result);
 
           break;

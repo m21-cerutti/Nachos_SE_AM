@@ -15,6 +15,7 @@
 #include "interrupt.h"
 #include "stats.h"
 #include "timer.h"
+#include "synch.h"
 
 // Initialization and cleanup routines
 extern void Initialize (int argc, char **argv);	// Initialization,
@@ -36,6 +37,7 @@ extern Machine *machine;	// user program memory and registers
 #ifdef CHANGED
 
 #define MAX_STRING_SIZE 1024
+extern Semaphore* accessBuffer;
 extern char* bufferSystem;
 int copyStringFromMachine(int from, char* to, unsigned size);
 int copyStringToMachine(char* from, int to, unsigned size);

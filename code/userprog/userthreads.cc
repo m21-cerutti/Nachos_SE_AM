@@ -5,12 +5,21 @@
 int do_ThreadCreate(int f, int arg)
 {
   DEBUG('x', "Initialise User Thread.\n");
-  Thread *newThread = new Thread ("ThreadCreated");
-  Threads_Struct* threads_struct = new Threads_Struct();
-  threads_struct->f = f;
-  threads_struct->arg = arg;
-  newThread->space = currentThread->space;
-  newThread->Start(StartUserThread, threads_struct);
+  try
+  {
+    Thread *newThread = new Thread ("ThreadCreated");
+    Threads_Struct* threads_struct = new Threads_Struct();
+    threads_struct->f = f;
+    threads_struct->arg = arg;
+    newThread->space = currentThread->space;
+    newThread->Start(StartUserThread, threads_struct);
+  }
+  catch(int e)
+  {
+      DEBUG('x', "Initialise User Thread have failed, out of memory !\n");
+      return -1;
+  }
+  return 0;
 }
 
 void do_ThreadExit(void)
@@ -18,7 +27,7 @@ void do_ThreadExit(void)
   currentThread->Finish();
 }
 
-static void StartUserThread(void* threads_pt)
+void StartUserThread(void* threads_pt)
 {
   DEBUG('x', "Start User Thread.\n");
   Threads_Struct* threads_struct= (Threads_Struct*) threads_pt;
