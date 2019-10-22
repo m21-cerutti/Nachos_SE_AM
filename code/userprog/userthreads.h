@@ -15,6 +15,4 @@ extern int do_ThreadCreate(int f, int arg);
 
 extern void do_ThreadExit(void);
 
-void StartUserThread(void* Threads_S);
-
 #endif // CHANGED
