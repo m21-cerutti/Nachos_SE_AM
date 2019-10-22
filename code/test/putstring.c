@@ -13,7 +13,7 @@
 int main()
 {
   PutString("Hello world!\n");
-  PutString("How are you ?");
+  PutString("How are you ?\n");
 
   return 0;
 }

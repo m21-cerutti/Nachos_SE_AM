@@ -25,6 +25,9 @@
 #include "system.h"
 #include "syscall.h"
 
+#ifdef CHANGED
+#include "userthreads.h"
+#endif // CHANGED
 
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -156,6 +159,27 @@ ExceptionHandler (ExceptionType which)
         DEBUG ('s', "%d character read total.\n", totalread);
         break;
       }
+
+      case SC_ThreadCreate:
+        {
+
+          int addr_f = (int) machine->ReadRegister (4);
+          int addr_arg = (int) machine->ReadRegister (5);
+
+          int result = do_ThreadCreate(addr_f, addr_arg);
+          DEBUG ('x', "Create new thread with result %d.\n", result);
+          
+          machine->WriteRegister(2, result);
+
+          break;
+        }
+
+        case SC_ThreadExit:
+          {
+            DEBUG ('x', "Exit thread.\n");
+            do_ThreadExit();
+            break;
+          }
 
       #endif // CHANGED
 
