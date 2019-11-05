@@ -34,7 +34,9 @@ class AddrSpace:dontcopythis
 
     #ifdef CHANGED
 
+    AddrSpace* CopySpace();
     int AllocateUserStack();
+    int DeleteUserStack();
 
     #endif //CHANGED
 
@@ -48,6 +50,13 @@ class AddrSpace:dontcopythis
     unsigned NumPages() { return numPages; }
 
   private:
+
+    #ifdef CHANGED
+
+    int NbOwners;
+
+    #endif //CHANGED
+
     NoffHeader noffH;		// Program layout
 
     TranslationEntry * pageTable; // Page table

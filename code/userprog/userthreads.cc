@@ -4,7 +4,7 @@
 
 static void StartUserThread(void* threads_pt)
 {
-  DEBUG('x', "Start User Thread.\n");
+  DEBUG('c', "Start User Thread.\n");
   Threads_Struct* threads_struct= (Threads_Struct*) threads_pt;
 
   int i;
@@ -13,7 +13,7 @@ static void StartUserThread(void* threads_pt)
 
   // Initial program counter for the threads, it's the function.
   machine->WriteRegister (PCReg, threads_struct->f);
-  DEBUG ('x', "Initializing starting thread with function at 0x%x\n", threads_struct->f);
+  DEBUG ('c', "Initializing starting thread with function at 0x%x\n", threads_struct->f);
 
   // Need to also tell MIPS where next instruction is, because
   // of branch delay possibility
@@ -21,33 +21,32 @@ static void StartUserThread(void* threads_pt)
 
   int newStack = currentThread->space->AllocateUserStack();
   machine->WriteRegister (StackReg, newStack);
-  DEBUG ('x', "Initializing thread's stack register to 0x%x\n", newStack);
+  DEBUG ('c', "Initializing thread's stack register to 0x%x\n", newStack);
 
   machine->WriteRegister (4, threads_struct->arg);
-  DEBUG ('x', "Initializing first argument register with arg 0x%x\n", threads_struct->arg);
-
-  DEBUG('x', "Delete structure.\n");
+  DEBUG ('c', "Initializing first argument register with arg 0x%x\n", threads_struct->arg);
 
   machine->Run();
 
+  DEBUG('c', "Delete structure.\n");
   delete threads_struct;
 }
 
 int do_ThreadCreate(int f, int arg)
 {
-  DEBUG('x', "Initialise User Thread.\n");
+  DEBUG('c', "Initialise User Thread.\n");
   try
   {
-    Thread *newThread = new Thread ("ThreadCreated");
+    Thread *newThread = new Thread ("ThreadChild");
     Threads_Struct* threads_struct = new Threads_Struct();
     threads_struct->f = f;
     threads_struct->arg = arg;
-    newThread->space = currentThread->space;
+    newThread->space = currentThread->space->CopySpace();
     newThread->Start(StartUserThread, threads_struct);
   }
   catch(int e)
   {
-      DEBUG('x', "Initialise User Thread have failed, out of memory !\n");
+      DEBUG('c', "Initialise User Thread have failed, out of memory !\n");
       return -1;
   }
   return 0;
@@ -55,6 +54,13 @@ int do_ThreadCreate(int f, int arg)
 
 void do_ThreadExit(void)
 {
+  DEBUG ('c', "Exit the thread.\n");
+  int lastThreads = currentThread->space->DeleteUserStack();
+  if(lastThreads == 0)
+  {
+    DEBUG ('c', "Last thread of processus, Shutdown.\n");
+    interrupt->Halt ();
+  }
   currentThread->Finish();
 }
 

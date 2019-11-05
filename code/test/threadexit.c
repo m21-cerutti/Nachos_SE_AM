@@ -1,9 +1,9 @@
 #if CHANGED
 
-/* threadsconsole.c
- *	Resume
+/* threadexit.c
+ *	Simple function to test the deletetion of the main thread without interrupting the child.
  *
- *	Do
+ *	DO
  *
  * 	NOTE:
  */
@@ -13,10 +13,9 @@
 void FonctionThreads(void* arg)
 {
   int i = 0;
-  for ( ; i < 10; i++)
-  {
-    PutString("Hello, i'm your son !\n");
-  }
+  for(; i < 1000; i++)
+    PutChar('t');
+
   ThreadExit();
 }
 
@@ -25,18 +24,16 @@ void FonctionThreads(void* arg)
 
 int main()
 {
-  int i = 0;
-  void* null = 0;
-
+  void* null;
   if(ThreadCreate(FonctionThreads, null) != 0)
   {
     return -1;
   }
-  for (; i < 10; i++)
-  {
-    PutString("I'm your father, hello !\n");
-  }
+  PutChar('f');
+  PutChar('\n');
   ThreadExit();
+  //never reach
+  return -2;
 }
 
 #endif // CHANGED

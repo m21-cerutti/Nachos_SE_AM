@@ -129,6 +129,10 @@ AddrSpace::AddrSpace (OpenFile * executable)
     pageTable[0].valid = FALSE;			// Catch NULL dereference
 
     AddrSpaceList.Append(this);
+
+    #ifdef CHANGED
+    NbOwners = 1;
+    #endif
 }
 
 //----------------------------------------------------------------------
@@ -187,10 +191,30 @@ AddrSpace::InitRegisters ()
 //
 //----------------------------------------------------------------------
 
+AddrSpace* AddrSpace::CopySpace()
+{
+  NbOwners++;
+  DEBUG ('o', "Increment owners : %d.\n", NbOwners);
+  return this;
+}
+
 int
 AddrSpace::AllocateUserStack()
 {
-  return numPages * PageSize - 16 - 256;
+  int size = numPages * PageSize;
+  int newStack = size - 16 - (NbOwners-1)*256;
+  //TODO Assign differents stack
+  DEBUG ('c', "Allocate new stack register to 0x%x\n", newStack);
+  ASSERT(newStack > (size - UserStacksAreaSize));
+  return newStack;
+}
+
+int
+AddrSpace::DeleteUserStack()
+{
+  NbOwners--;
+  DEBUG ('o', "Decrement owners : %d.\n", NbOwners);
+  return NbOwners;
 }
 
 #endif //CHANGED

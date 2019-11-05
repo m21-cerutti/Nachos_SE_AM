@@ -172,7 +172,7 @@ ExceptionHandler (ExceptionType which)
           int addr_arg = (int) machine->ReadRegister (5);
 
           int result = do_ThreadCreate(addr_f, addr_arg);
-          DEBUG ('x', "Create new thread with result %d.\n", result);
+          DEBUG ('c', "Create new thread with result %d.\n", result);
 
           machine->WriteRegister(2, result);
 
@@ -181,7 +181,7 @@ ExceptionHandler (ExceptionType which)
 
         case SC_ThreadExit:
           {
-            DEBUG ('x', "Exit thread.\n");
+            DEBUG ('c', "Exiting the thread...\n");
             do_ThreadExit();
             break;
           }
