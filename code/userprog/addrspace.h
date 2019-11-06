@@ -21,6 +21,15 @@
 
 #define UserStacksAreaSize		1024	// increase this as necessary!
 
+#ifdef CHANGED
+
+#include "bitmap.h"
+#define StackThreadFactor 		4
+
+class Semaphore;
+
+#endif //CHANGED
+
 class AddrSpace:dontcopythis
 {
   public:
@@ -52,8 +61,9 @@ class AddrSpace:dontcopythis
   private:
 
     #ifdef CHANGED
-
-    int NbOwners;
+	Semaphore* threadsCreation;
+    int nbOwners;
+	BitMap* threadsStackPartition;
 
     #endif //CHANGED
 

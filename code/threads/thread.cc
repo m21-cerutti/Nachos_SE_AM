@@ -61,6 +61,10 @@ Thread::Thread (const char *threadName)
     userRegisters[LoadReg] = 0;
     userRegisters[LoadValueReg] = 0;
 
+#ifdef CHANGED
+	indexStackPartition = 0;
+#endif //CHANGED
+
 #endif
     ThreadList.Append(this);
 }

@@ -10,11 +10,19 @@
 
 #include "syscall.h"
 
+
 void FonctionThreads(void* arg)
 {
-  int nb = (int) arg;
-	volatile char a = 48;
-	PutChar(a+nb);
+	int i = (int) arg;
+	while(i == 0)
+	{
+		int k;
+		for (k=0; k<i; k++)
+			PutChar('1');
+	}
+	i++;
+	FonctionThreads(i);
+
   ThreadExit();
 }
 
@@ -23,15 +31,11 @@ void FonctionThreads(void* arg)
 
 int main()
 {
-  int i = 0;
-  for (; i < 10; i++)
+  if(ThreadCreate(FonctionThreads, 0) != 0)
   {
-    if(ThreadCreate(FonctionThreads, i) != 0)
-    {
-      return -1;
-    }
+    return -1;
   }
-  ThreadExit();
+	FonctionThreads( 1 );
 
   return 0;
 }

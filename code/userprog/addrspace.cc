@@ -22,6 +22,7 @@
 #include "syscall.h"
 #include "new"
 
+
 //----------------------------------------------------------------------
 // SwapHeader
 //      Do little endian to big endian conversion on the bytes in the
@@ -131,8 +132,11 @@ AddrSpace::AddrSpace (OpenFile * executable)
     AddrSpaceList.Append(this);
 
     #ifdef CHANGED
-    NbOwners = 1;
-    #endif
+    nbOwners = 1;
+	threadsCreation = new Semaphore("threads Creation", StackThreadFactor-1);
+	threadsStackPartition = new BitMap(StackThreadFactor);
+	threadsStackPartition->Mark(0);
+    #endif //CHANGED
 }
 
 //----------------------------------------------------------------------
@@ -142,6 +146,11 @@ AddrSpace::AddrSpace (OpenFile * executable)
 
 AddrSpace::~AddrSpace ()
 {
+#ifdef CHANGED
+	delete threadsCreation;
+	delete threadsStackPartition;
+#endif //CHANGED
+
   // LB: Missing [] for delete
   // delete pageTable;
   delete [] pageTable;
@@ -193,28 +202,46 @@ AddrSpace::InitRegisters ()
 
 AddrSpace* AddrSpace::CopySpace()
 {
-  NbOwners++;
-  DEBUG ('o', "Increment owners : %d.\n", NbOwners);
+  nbOwners++;
+  DEBUG ('o', "Increment owners : %d.\n", nbOwners);
   return this;
 }
+
+//----------------------------------------------------------------------
+// AddrSpace::AllocateUserStack
+//      Set .
+//
+//
+//----------------------------------------------------------------------
 
 int
 AddrSpace::AllocateUserStack()
 {
+	threadsCreation->P();
+	int newStackPartitionIndex = threadsStackPartition->Find();
+	currentThread->indexStackPartition = newStackPartitionIndex;
   int size = numPages * PageSize;
-  int newStack = size - 16 - (NbOwners-1)*256;
-  //TODO Assign differents stack
+  int newStack = size - 16 - (newStackPartitionIndex)*256;
   DEBUG ('c', "Allocate new stack register to 0x%x\n", newStack);
   ASSERT(newStack > (size - UserStacksAreaSize));
   return newStack;
 }
 
+//----------------------------------------------------------------------
+// AddrSpace::DeleteUserStack
+//      Set .
+//
+//
+//----------------------------------------------------------------------
+
 int
 AddrSpace::DeleteUserStack()
 {
-  NbOwners--;
-  DEBUG ('o', "Decrement owners : %d.\n", NbOwners);
-  return NbOwners;
+	threadsStackPartition->Clear(currentThread->indexStackPartition);
+	threadsCreation->V();
+  nbOwners--;
+  DEBUG ('o', "Decrement owners : %d.\n", nbOwners);
+  return nbOwners;
 }
 
 #endif //CHANGED

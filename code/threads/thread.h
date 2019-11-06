@@ -142,8 +142,11 @@ class Thread:dontcopythis
   public:
     void SaveUserState ();	// save user-level register state
     void RestoreUserState ();	// restore user-level register state
-
+#ifdef CHANGED
+	int indexStackPartition;
+#endif //CHANGED
     AddrSpace *space;		// User code this thread is running.
+
 #endif
 };
 
