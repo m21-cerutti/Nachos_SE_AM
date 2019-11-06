@@ -24,7 +24,7 @@ void FonctionThreads(void* arg)
 int main()
 {
   int i = 0;
-  for (; i < 10; i++)
+  for (; i < 10000; i++)
   {
     if(ThreadCreate(FonctionThreads, i) != 0)
     {

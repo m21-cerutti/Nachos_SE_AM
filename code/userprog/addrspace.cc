@@ -221,7 +221,7 @@ AddrSpace::AllocateUserStack()
 	int newStackPartitionIndex = threadsStackPartition->Find();
 	currentThread->indexStackPartition = newStackPartitionIndex;
   int size = numPages * PageSize;
-  int newStack = size - 16 - (newStackPartitionIndex)*256;
+  int newStack = size - 16 - (newStackPartitionIndex)*(UserStacksAreaSize/StackThreadFactor);
   DEBUG ('c', "Allocate new stack register to 0x%x\n", newStack);
   ASSERT(newStack > (size - UserStacksAreaSize));
   return newStack;
