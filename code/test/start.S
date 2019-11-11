@@ -162,10 +162,6 @@ PutChar:
 	j	$31
 	.end PutChar
 
-#endif // CHANGED
-
-#ifdef CHANGED
-
   .globl PutString
   .ent	PutString
 PutString:

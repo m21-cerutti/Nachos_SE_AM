@@ -3,9 +3,8 @@
 /* threadexit.c
  *	Simple function to test the deletetion of the main thread without interrupting the child.
  *
- *	DO
+ *	Print t one thousand time for the son, f -\n for the father and the ftwo call ThreadExit.
  *
- * 	NOTE:
  */
 
 #include "syscall.h"

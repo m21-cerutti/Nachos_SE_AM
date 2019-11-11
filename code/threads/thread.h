@@ -77,98 +77,102 @@ extern void ThreadPrint (void *arg);
 
 class Thread:dontcopythis
 {
-  private:
-    // NOTE: DO NOT CHANGE the order of these first two members.
-    // THEY MUST be in this position for SWITCH to work.
-    unsigned long *stackTop;		// the current stack pointer
-    unsigned long machineState[MachineStateSize];	// all registers except for stackTop
+private:
+  // NOTE: DO NOT CHANGE the order of these first two members.
+  // THEY MUST be in this position for SWITCH to work.
+  unsigned long *stackTop;		// the current stack pointer
+  unsigned long machineState[MachineStateSize];	// all registers except for stackTop
 
-  public:
-      Thread (const char *debugName);	// initialize a Thread
-     ~Thread ();		// deallocate a Thread
-    // NOTE -- thread being deleted
-    // must not be running when delete
-    // is called
+public:
+  Thread (const char *debugName);	// initialize a Thread
+  ~Thread ();		// deallocate a Thread
+  // NOTE -- thread being deleted
+  // must not be running when delete
+  // is called
 
-    // basic thread operations
-    void Start (VoidFunctionPtr func, void *arg);	// Make thread run (*func)(arg)
-    void Yield ();		// Relinquish the CPU if any
-    // other thread is runnable
-    void Sleep ();		// Put the thread to sleep and
-    // relinquish the processor
-    void Finish ();		// The thread is done executing
+  // basic thread operations
+  void Start (VoidFunctionPtr func, void *arg);	// Make thread run (*func)(arg)
+  void Yield ();		// Relinquish the CPU if any
+  // other thread is runnable
+  void Sleep ();		// Put the thread to sleep and
+  // relinquish the processor
+  void Finish ();		// The thread is done executing
 
-    void CheckOverflow ();	// Check if thread has
-    // overflowed its stack
-    void setStatus (ThreadStatus st)
-    {
-	status = st;
-    }
-    const char *getName ()
-    {
-	return (name);
-    }
-    void Print ()
-    {
-	printf ("%s, ", name);
-    }
+  void CheckOverflow ();	// Check if thread has
+  // overflowed its stack
+  void setStatus (ThreadStatus st)
+  {
+    status = st;
+  }
+  const char *getName ()
+  {
+    return (name);
+  }
+  void Print ()
+  {
+    printf ("%s, ", name);
+  }
 
-#ifdef USER_PROGRAM
-    void DumpThreadState(FILE *output, int ptr_x, unsigned virtual_x, unsigned virtual_y, unsigned blocksize);
-				// Draw the state for thread
-#endif
+  #ifdef USER_PROGRAM
+  void DumpThreadState(FILE *output, int ptr_x, unsigned virtual_x, unsigned virtual_y, unsigned blocksize);
+  // Draw the state for thread
+  #endif
 
-  private:
-    // some of the private data for this class is listed above
+private:
+  // some of the private data for this class is listed above
 
-    unsigned long *stack;	// Bottom of the stack
-    // NULL if this is the main thread
-    // (If NULL, don't deallocate stack)
-    unsigned int valgrind_id;	// valgrind ID for the stack
-    ThreadStatus status;	// ready, running or blocked
-    const char *name;
+  unsigned long *stack;	// Bottom of the stack
+  // NULL if this is the main thread
+  // (If NULL, don't deallocate stack)
+  unsigned int valgrind_id;	// valgrind ID for the stack
+  ThreadStatus status;	// ready, running or blocked
+  const char *name;
 
-    void StackAllocate (VoidFunctionPtr func, void *arg);
-    // Allocate a stack for thread.
-    // Used internally by Start()
+  void StackAllocate (VoidFunctionPtr func, void *arg);
+  // Allocate a stack for thread.
+  // Used internally by Start()
 
-#ifdef USER_PROGRAM
-// A thread running a user program actually has *two* sets of CPU registers --
-// one for its state while executing user code, one for its state
-// while executing kernel code.
+  #ifdef USER_PROGRAM
+  // A thread running a user program actually has *two* sets of CPU registers --
+  // one for its state while executing user code, one for its state
+  // while executing kernel code.
 
-    int userRegisters[NumTotalRegs];	// user-level CPU register state
+  int userRegisters[NumTotalRegs];	// user-level CPU register state
 
-  public:
-    void SaveUserState ();	// save user-level register state
-    void RestoreUserState ();	// restore user-level register state
-#ifdef CHANGED
-	int indexStackPartition;
-#endif //CHANGED
-    AddrSpace *space;		// User code this thread is running.
+public:
+  void SaveUserState ();	// save user-level register state
+  void RestoreUserState ();	// restore user-level register state
 
-#endif
+  #ifdef CHANGED
+  
+  int indexStackPartition;
+
+  #endif //CHANGED
+
+  AddrSpace *space;		// User code this thread is running.
+
+  #endif
 };
 
 extern List ThreadList;
 
 #ifdef USER_PROGRAM
 void DumpThreadsState(FILE *output, AddrSpace *space, unsigned virtual_x, unsigned virtual_y, unsigned blocksize);
-				// Draw the states for threads
+// Draw the states for threads
 #endif
 
 // Magical machine-dependent routines, defined in switch.s
 
 extern "C"
 {
-// First frame on thread execution stack;
-//      enable interrupts
-//      call "func"
-//      (when func returns, if ever) call ThreadFinish()
-    void ThreadRoot ();
+  // First frame on thread execution stack;
+  //      enable interrupts
+  //      call "func"
+  //      (when func returns, if ever) call ThreadFinish()
+  void ThreadRoot ();
 
-// Stop running oldThread and start running newThread
-    void SWITCH (Thread * oldThread, Thread * newThread);
+  // Stop running oldThread and start running newThread
+  void SWITCH (Thread * oldThread, Thread * newThread);
 }
 
 #endif				// THREAD_H

@@ -1,11 +1,13 @@
 #if CHANGED
 
-/* multithreads.c
- *	Resume.
+/* threadsacessotherstack.c
+ *	Simple programm to test the access to an other thread's stack.
  *
- *	Do.
+ *	Create a thread that call a function, the main call it too, that give a pointer to a variable from the thread in a global variable if the son,
+ *	ele the main when the global variable is set try to access to it and change it.
+ *	If it succeed, the thread print memory corrupted, else it's an infinite loop.
  *
- * 	NOTE:
+ * 	NOTE: before entering the loop, son and father print 0 and 1 respectively.
  */
 
 #include "syscall.h"
@@ -18,12 +20,14 @@ void FonctionThreads(void* arg)
 	if(i == 0)
 	{
 		accessOtherStack = &i;
-		while(i == 0) PutChar('1'); //Normally error from the machine and don't reach the next instructions
+		PutChar('1');
+		while(i == 0); //Normally error from the machine and don't reach the next instructions
 		PutString("Memory corrupted.");
 	}
 	else
 	{
-		while(accessOtherStack == 0) PutChar('0');
+		PutChar('0');
+		while(accessOtherStack == 0);
 		*accessOtherStack = *accessOtherStack +1;
 	}
   	ThreadExit();

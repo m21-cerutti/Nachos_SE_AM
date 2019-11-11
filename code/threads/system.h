@@ -15,7 +15,10 @@
 #include "interrupt.h"
 #include "stats.h"
 #include "timer.h"
+
+#ifdef CHANGED
 #include "synch.h"
+#endif // CHANGED
 
 // Initialization and cleanup routines
 extern void Initialize (int argc, char **argv);	// Initialization,

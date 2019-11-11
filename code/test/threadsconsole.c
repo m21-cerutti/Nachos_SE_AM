@@ -1,11 +1,11 @@
 #if CHANGED
 
 /* threadsconsole.c
- *	Resume
+ *	Simple program to tesst the use of the console with threads.
  *
- *	Do
+ *	Create one threads and print ten times a string depending on it's the father(main) or the son(the thread created).
  *
- * 	NOTE:
+ * 	NOTE: THe order is not determined.
  */
 
 #include "syscall.h"

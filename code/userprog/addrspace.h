@@ -32,38 +32,39 @@ class Semaphore;
 
 class AddrSpace:dontcopythis
 {
-  public:
-    AddrSpace (OpenFile * executable);	// Create an address space,
-    // initializing it with the program
-    // stored in the file "executable"
-    ~AddrSpace ();		// De-allocate an address space
+public:
+  AddrSpace (OpenFile * executable);	// Create an address space,
+  // initializing it with the program
+  // stored in the file "executable"
+  ~AddrSpace ();		// De-allocate an address space
 
-    void InitRegisters ();	// Initialize user-level CPU registers,
-    // before jumping to user code
+  void InitRegisters ();	// Initialize user-level CPU registers,
+  // before jumping to user code
 
-    #ifdef CHANGED
+  #ifdef CHANGED
 
-    AddrSpace* CopySpace();
-    int AllocateUserStack();
-    int DeleteUserStack();
+  AddrSpace* CopySpace();
+  int AllocateUserStack();
+  int DeleteUserStack();
 
-    #endif //CHANGED
+  #endif //CHANGED
 
-    void SaveState ();		// Save/restore address space-specific
-    void RestoreState ();	// info on a context switch
+  void SaveState ();		// Save/restore address space-specific
+  void RestoreState ();	// info on a context switch
 
-    unsigned Dump(FILE *output, unsigned virtual_x, unsigned virtual_width,
-		    unsigned physical_x, unsigned virtual_y, unsigned y,
-		    unsigned blocksize);
-				// Dump program layout as SVG
+  unsigned Dump(FILE *output, unsigned virtual_x, unsigned virtual_width,
+    unsigned physical_x, unsigned virtual_y, unsigned y,
+    unsigned blocksize);
+    // Dump program layout as SVG
     unsigned NumPages() { return numPages; }
 
   private:
 
     #ifdef CHANGED
-	Semaphore* threadsCreation;
+    
+    Semaphore* threadsCreation;
     int nbOwners;
-	BitMap* threadsStackPartition;
+    BitMap* threadsStackPartition;
 
     #endif //CHANGED
 
@@ -71,8 +72,8 @@ class AddrSpace:dontcopythis
 
     TranslationEntry * pageTable; // Page table
     unsigned int numPages;	// Number of pages in the page table
-};
+  };
 
-extern List AddrspaceList;
+  extern List AddrspaceList;
 
-#endif // ADDRSPACE_H
+  #endif // ADDRSPACE_H

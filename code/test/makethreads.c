@@ -1,7 +1,7 @@
 #if CHANGED
 
 /* makethreads.c
- *	Simple function to test the creation and the deletetion of one thread.
+ *	Simple program to test the creation and the deletetion of one thread.
  *
  *	The child print a char 's' and then '\n', the father do an active wait.
  *

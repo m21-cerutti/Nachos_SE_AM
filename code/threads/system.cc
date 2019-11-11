@@ -268,6 +268,7 @@ Cleanup ()
   delete bufferSystem;
   bufferSystem = NULL;
   delete accessBuffer;
+  accessBuffer = NULL;
   #endif // CHANGED
 
   #endif
