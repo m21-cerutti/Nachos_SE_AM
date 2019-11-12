@@ -61,7 +61,7 @@ public:
   private:
 
     #ifdef CHANGED
-    
+
     Semaphore* threadsCreation;
     int nbOwners;
     BitMap* threadsStackPartition;

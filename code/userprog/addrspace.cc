@@ -52,6 +52,23 @@ SwapHeader (NoffHeader * noffH)
 //----------------------------------------------------------------------
 List AddrSpaceList;
 
+
+
+
+//----------------------------------------------------------------------
+// ReadAtVirtual
+//      dO
+//----------------------------------------------------------------------
+#ifdef CHANGED
+
+static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, int position, TranslationEntry *pageTable, unsigned numPages)
+{
+    executable->ReadAt (&buff, numBytes, position);
+    //TODO write in virtual adress
+}
+
+#endif //CHANGED
+
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
 //      Create an address space to run a user program.
@@ -72,6 +89,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
   unsigned int i, size;
 
   executable->ReadAt (&noffH, sizeof (noffH), 0);
+
   if ((noffH.noffMagic != NOFFMAGIC) &&
   (WordToHost (noffH.noffMagic) == NOFFMAGIC))
   SwapHeader (&noffH);
@@ -111,6 +129,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
   {
     DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
     noffH.code.virtualAddr, noffH.code.size);
+
     executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),
     noffH.code.size, noffH.code.inFileAddr);
   }
@@ -118,6 +137,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
   {
     DEBUG ('a', "Initializing data segment, at 0x%x, size 0x%x\n",
     noffH.initData.virtualAddr, noffH.initData.size);
+
     executable->ReadAt (&
       (machine->mainMemory
         [noffH.initData.virtualAddr]),
