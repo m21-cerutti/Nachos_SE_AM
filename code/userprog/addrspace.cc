@@ -22,7 +22,6 @@
 #include "syscall.h"
 #include "new"
 
-
 //----------------------------------------------------------------------
 // SwapHeader
 //      Do little endian to big endian conversion on the bytes in the
@@ -31,19 +30,19 @@
 //----------------------------------------------------------------------
 
 static void
-SwapHeader (NoffHeader * noffH)
+SwapHeader(NoffHeader *noffH)
 {
-  noffH->noffMagic = WordToHost (noffH->noffMagic);
-  noffH->code.size = WordToHost (noffH->code.size);
-  noffH->code.virtualAddr = WordToHost (noffH->code.virtualAddr);
-  noffH->code.inFileAddr = WordToHost (noffH->code.inFileAddr);
-  noffH->initData.size = WordToHost (noffH->initData.size);
-  noffH->initData.virtualAddr = WordToHost (noffH->initData.virtualAddr);
-  noffH->initData.inFileAddr = WordToHost (noffH->initData.inFileAddr);
-  noffH->uninitData.size = WordToHost (noffH->uninitData.size);
+  noffH->noffMagic = WordToHost(noffH->noffMagic);
+  noffH->code.size = WordToHost(noffH->code.size);
+  noffH->code.virtualAddr = WordToHost(noffH->code.virtualAddr);
+  noffH->code.inFileAddr = WordToHost(noffH->code.inFileAddr);
+  noffH->initData.size = WordToHost(noffH->initData.size);
+  noffH->initData.virtualAddr = WordToHost(noffH->initData.virtualAddr);
+  noffH->initData.inFileAddr = WordToHost(noffH->initData.inFileAddr);
+  noffH->uninitData.size = WordToHost(noffH->uninitData.size);
   noffH->uninitData.virtualAddr =
-  WordToHost (noffH->uninitData.virtualAddr);
-  noffH->uninitData.inFileAddr = WordToHost (noffH->uninitData.inFileAddr);
+      WordToHost(noffH->uninitData.virtualAddr);
+  noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
 }
 
 //----------------------------------------------------------------------
@@ -51,9 +50,6 @@ SwapHeader (NoffHeader * noffH)
 //      List of all address spaces, for debugging
 //----------------------------------------------------------------------
 List AddrSpaceList;
-
-
-
 
 //----------------------------------------------------------------------
 // ReadAtVirtual
@@ -63,8 +59,24 @@ List AddrSpaceList;
 
 static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, int position, TranslationEntry *pageTable, unsigned numPages)
 {
-    executable->ReadAt (&buff, numBytes, position);
-    //TODO write in virtual adress
+
+  TranslationEntry *tmpPage = machine->pageTable;
+  int tmpPageSize = machine->pageTableSize;
+
+  machine->pageTable = pageTable;
+  machine->pageTableSize = numPages;
+
+  char buffer[numBytes];
+  int nbRead = executable->ReadAt(&buffer, numBytes, position);
+  int i = 0;
+  while (i < nbRead)
+  {
+    machine->WriteMem(virtualaddr + i, 1, buffer[i]);
+    i++;
+  }
+
+  machine->pageTable = tmpPage;
+  machine->pageTableSize = tmpPageSize;
 }
 
 #endif //CHANGED
@@ -84,22 +96,22 @@ static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, i
 //      "executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
-AddrSpace::AddrSpace (OpenFile * executable)
+AddrSpace::AddrSpace(OpenFile *executable)
 {
   unsigned int i, size;
 
-  executable->ReadAt (&noffH, sizeof (noffH), 0);
+  executable->ReadAt(&noffH, sizeof(noffH), 0);
 
   if ((noffH.noffMagic != NOFFMAGIC) &&
-  (WordToHost (noffH.noffMagic) == NOFFMAGIC))
-  SwapHeader (&noffH);
+      (WordToHost(noffH.noffMagic) == NOFFMAGIC))
+    SwapHeader(&noffH);
   /* Check that this is really a MIPS program */
-  ASSERT (noffH.noffMagic == NOFFMAGIC);
+  ASSERT(noffH.noffMagic == NOFFMAGIC);
 
   // how big is address space?
-  size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStacksAreaSize;	// we need to increase the size
+  size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStacksAreaSize; // we need to increase the size
   // to leave room for the stack
-  numPages = divRoundUp (size, PageSize);
+  numPages = divRoundUp(size, PageSize);
   size = numPages * PageSize;
 
   // check we're not trying
@@ -107,19 +119,19 @@ AddrSpace::AddrSpace (OpenFile * executable)
   // at least until we have
   // virtual memory
   if (numPages > NumPhysPages)
-  throw std::bad_alloc();
+    throw std::bad_alloc();
 
-  DEBUG ('a', "Initializing address space, num pages %d, total size 0x%x\n",
-  numPages, size);
+  DEBUG('a', "Initializing address space, num pages %d, total size 0x%x\n",
+        numPages, size);
   // first, set up the translation
   pageTable = new TranslationEntry[numPages];
   for (i = 0; i < numPages; i++)
   {
-    pageTable[i].physicalPage = i;	// for now, phys page # = virtual page #
+    pageTable[i].physicalPage = i; // for now, phys page # = virtual page #
     pageTable[i].valid = TRUE;
     pageTable[i].use = FALSE;
     pageTable[i].dirty = FALSE;
-    pageTable[i].readOnly = FALSE;	// if the code segment was entirely on
+    pageTable[i].readOnly = FALSE; // if the code segment was entirely on
     // a separate page, we could set its
     // pages to be read-only
   }
@@ -127,253 +139,255 @@ AddrSpace::AddrSpace (OpenFile * executable)
   // then, copy in the code and data segments into memory
   if (noffH.code.size > 0)
   {
-    DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
-    noffH.code.virtualAddr, noffH.code.size);
+    DEBUG('a', "Initializing code segment, at 0x%x, size 0x%x\n",
+          noffH.code.virtualAddr, noffH.code.size);
 
-    executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),
-    noffH.code.size, noffH.code.inFileAddr);
+#ifdef CHANGED
+    ReadAtVirtual(executable, noffH.code.virtualAddr, noffH.code.size, noffH.code.inFileAddr, pageTable, numPages);
+#else
+    executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
+                       noffH.code.size, noffH.code.inFileAddr);
+#endif //CHANGED
   }
   if (noffH.initData.size > 0)
   {
-    DEBUG ('a', "Initializing data segment, at 0x%x, size 0x%x\n",
-    noffH.initData.virtualAddr, noffH.initData.size);
+    DEBUG('a', "Initializing data segment, at 0x%x, size 0x%x\n",
+          noffH.initData.virtualAddr, noffH.initData.size);
 
-    executable->ReadAt (&
-      (machine->mainMemory
-        [noffH.initData.virtualAddr]),
-        noffH.initData.size, noffH.initData.inFileAddr);
-      }
+#ifdef CHANGED
+    ReadAtVirtual(executable, noffH.initData.virtualAddr, noffH.initData.size, noffH.initData.inFileAddr, pageTable, numPages);
+#else
+    executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
+                       noffH.initData.size, noffH.initData.inFileAddr);
+#endif //CHANGED
+  }
 
-      DEBUG ('a', "Area for stacks at 0x%x, size 0x%x\n",
-      size - UserStacksAreaSize, UserStacksAreaSize);
+  DEBUG('a', "Area for stacks at 0x%x, size 0x%x\n",
+        size - UserStacksAreaSize, UserStacksAreaSize);
 
-      pageTable[0].valid = FALSE;			// Catch NULL dereference
+  pageTable[0].valid = FALSE; // Catch NULL dereference
 
-      AddrSpaceList.Append(this);
+  AddrSpaceList.Append(this);
 
-      #ifdef CHANGED
-      nbOwners = 1;
-      threadsCreation = new Semaphore("threads Creation", StackThreadFactor-1);
-      threadsStackPartition = new BitMap(StackThreadFactor);
-      threadsStackPartition->Mark(0);
-      #endif //CHANGED
-    }
+#ifdef CHANGED
+  nbOwners = 1;
+  threadsCreation = new Semaphore("threads Creation", StackThreadFactor - 1);
+  threadsStackPartition = new BitMap(StackThreadFactor);
+  threadsStackPartition->Mark(0);
+#endif //CHANGED
+}
 
-    //----------------------------------------------------------------------
-    // AddrSpace::~AddrSpace
-    //      Dealloate an address space.  Nothing for now!
-    //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::~AddrSpace
+//      Dealloate an address space.  Nothing for now!
+//----------------------------------------------------------------------
 
-    AddrSpace::~AddrSpace ()
-    {
-      #ifdef CHANGED
-      delete threadsCreation;
-      delete threadsStackPartition;
-      #endif //CHANGED
+AddrSpace::~AddrSpace()
+{
+#ifdef CHANGED
+  delete threadsCreation;
+  delete threadsStackPartition;
+#endif //CHANGED
 
-      // LB: Missing [] for delete
-      // delete pageTable;
-      delete [] pageTable;
-      // End of modification
+  // LB: Missing [] for delete
+  // delete pageTable;
+  delete[] pageTable;
+  // End of modification
 
-      AddrSpaceList.Remove(this);
-    }
+  AddrSpaceList.Remove(this);
+}
 
-    //----------------------------------------------------------------------
-    // AddrSpace::InitRegisters
-    //      Set the initial values for the user-level register set.
-    //
-    //      We write these directly into the "machine" registers, so
-    //      that we can immediately jump to user code.  Note that these
-    //      will be saved/restored into the currentThread->userRegisters
-    //      when this thread is context switched out.
-    //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::InitRegisters
+//      Set the initial values for the user-level register set.
+//
+//      We write these directly into the "machine" registers, so
+//      that we can immediately jump to user code.  Note that these
+//      will be saved/restored into the currentThread->userRegisters
+//      when this thread is context switched out.
+//----------------------------------------------------------------------
 
-    void
-    AddrSpace::InitRegisters ()
-    {
-      int i;
+void AddrSpace::InitRegisters()
+{
+  int i;
 
-      for (i = 0; i < NumTotalRegs; i++)
-      machine->WriteRegister (i, 0);
+  for (i = 0; i < NumTotalRegs; i++)
+    machine->WriteRegister(i, 0);
 
-      // Initial program counter -- must be location of "Start"
-      machine->WriteRegister (PCReg, USER_START_ADDRESS);
+  // Initial program counter -- must be location of "Start"
+  machine->WriteRegister(PCReg, USER_START_ADDRESS);
 
-      // Need to also tell MIPS where next instruction is, because
-      // of branch delay possibility
-      machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
+  // Need to also tell MIPS where next instruction is, because
+  // of branch delay possibility
+  machine->WriteRegister(NextPCReg, machine->ReadRegister(PCReg) + 4);
 
-      // Set the stack register to the end of the address space, where we
-      // allocated the stack; but subtract off a bit, to make sure we don't
-      // accidentally reference off the end!
-      machine->WriteRegister (StackReg, numPages * PageSize - 16);
-      DEBUG ('a', "Initializing stack register to 0x%x\n",
-      numPages * PageSize - 16);
-    }
+  // Set the stack register to the end of the address space, where we
+  // allocated the stack; but subtract off a bit, to make sure we don't
+  // accidentally reference off the end!
+  machine->WriteRegister(StackReg, numPages * PageSize - 16);
+  DEBUG('a', "Initializing stack register to 0x%x\n",
+        numPages * PageSize - 16);
+}
 
-    #ifdef CHANGED
-    //----------------------------------------------------------------------
-    // AddrSpace::CopySpace
-    //      Use for threads to increment the owners of this space.
-    //----------------------------------------------------------------------
+#ifdef CHANGED
+//----------------------------------------------------------------------
+// AddrSpace::CopySpace
+//      Use for threads to increment the owners of this space.
+//----------------------------------------------------------------------
 
-    AddrSpace* AddrSpace::CopySpace()
-    {
-      nbOwners++;
-      DEBUG ('o', "Increment owners : %d.\n", nbOwners);
-      return this;
-    }
+AddrSpace *AddrSpace::CopySpace()
+{
+  nbOwners++;
+  DEBUG('o', "Increment owners : %d.\n", nbOwners);
+  return this;
+}
 
-    //----------------------------------------------------------------------
-    // AddrSpace::AllocateUserStack
-    //      Allocate the stack for new user threads from the parent threads.
-    //  Find a free partition and set the partition index for the stack in the thread.
-    //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::AllocateUserStack
+//      Allocate the stack for new user threads from the parent threads.
+//  Find a free partition and set the partition index for the stack in the thread.
+//----------------------------------------------------------------------
 
-    int
-    AddrSpace::AllocateUserStack()
-    {
-      threadsCreation->P();
-      int newStackPartitionIndex = threadsStackPartition->Find();
-      currentThread->indexStackPartition = newStackPartitionIndex;
-      int size = numPages * PageSize;
-      int newStack = size - 16 - (newStackPartitionIndex)*(UserStacksAreaSize/StackThreadFactor);
-      DEBUG ('c', "Allocate new stack register to 0x%x\n", newStack);
-      ASSERT(newStack > (size - UserStacksAreaSize));
-      return newStack;
-    }
+int AddrSpace::AllocateUserStack()
+{
+  threadsCreation->P();
+  int newStackPartitionIndex = threadsStackPartition->Find();
+  currentThread->indexStackPartition = newStackPartitionIndex;
+  int size = numPages * PageSize;
+  int newStack = size - 16 - (newStackPartitionIndex) * (UserStacksAreaSize / StackThreadFactor);
+  DEBUG('c', "Allocate new stack register to 0x%x\n", newStack);
+  ASSERT(newStack > (size - UserStacksAreaSize));
+  return newStack;
+}
 
-    //----------------------------------------------------------------------
-    // AddrSpace::DeleteUserStack
-    //      Free the stack of the thread for others user threads
-    //  and decrement the number of owners.
-    //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::DeleteUserStack
+//      Free the stack of the thread for others user threads
+//  and decrement the number of owners.
+//----------------------------------------------------------------------
 
-    int
-    AddrSpace::DeleteUserStack()
-    {
-      threadsStackPartition->Clear(currentThread->indexStackPartition);
-      threadsCreation->V();
-      nbOwners--;
-      DEBUG ('o', "Decrement owners : %d.\n", nbOwners);
-      return nbOwners;
-    }
+int AddrSpace::DeleteUserStack()
+{
+  threadsStackPartition->Clear(currentThread->indexStackPartition);
+  threadsCreation->V();
+  nbOwners--;
+  DEBUG('o', "Decrement owners : %d.\n", nbOwners);
+  return nbOwners;
+}
 
-    #endif //CHANGED
+#endif //CHANGED
 
-    //----------------------------------------------------------------------
-    // AddrSpace::Dump
-    //      Dump program layout as SVG
-    //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::Dump
+//      Dump program layout as SVG
+//----------------------------------------------------------------------
 
-    static void
-    DrawArea(FILE *output, unsigned x, unsigned virtual_x,
-      unsigned y, unsigned blocksize,
-      struct segment *segment, const char *name)
-      {
-        if (segment->size == 0)
-        return;
+static void
+DrawArea(FILE *output, unsigned x, unsigned virtual_x,
+         unsigned y, unsigned blocksize,
+         struct segment *segment, const char *name)
+{
+  if (segment->size == 0)
+    return;
 
-        ASSERT((segment->virtualAddr % PageSize == 0));
-        ASSERT((segment->size % PageSize == 0));
-        unsigned page = segment->virtualAddr / PageSize;
-        unsigned end = (segment->virtualAddr + segment->size) / PageSize;
+  ASSERT((segment->virtualAddr % PageSize == 0));
+  ASSERT((segment->size % PageSize == 0));
+  unsigned page = segment->virtualAddr / PageSize;
+  unsigned end = (segment->virtualAddr + segment->size) / PageSize;
 
-        fprintf(output, "<rect x=\"%u\" y=\"%u\" width=\"%u\" height=\"%u\" "
-        "fill=\"#ffffff\" "
-        "stroke=\"#000000\" stroke-width=\"1\"/>\n",
-        x, y - end * blocksize,
-        virtual_x - x, (end - page) * blocksize);
+  fprintf(output, "<rect x=\"%u\" y=\"%u\" width=\"%u\" height=\"%u\" "
+                  "fill=\"#ffffff\" "
+                  "stroke=\"#000000\" stroke-width=\"1\"/>\n",
+          x, y - end * blocksize,
+          virtual_x - x, (end - page) * blocksize);
 
-        fprintf(output, "<text x=\"%u\" y=\"%u\" fill=\"#000000\" font-size=\"%u\">%s</text>\n",
-        x, y - page * blocksize, blocksize, name);
-      }
+  fprintf(output, "<text x=\"%u\" y=\"%u\" fill=\"#000000\" font-size=\"%u\">%s</text>\n",
+          x, y - page * blocksize, blocksize, name);
+}
 
-      unsigned
-      AddrSpace::Dump(FILE *output, unsigned virtual_x, unsigned virtual_width,
-        unsigned physical_x, unsigned virtual_y, unsigned y,
-        unsigned blocksize)
-        {
-          unsigned ret = machine->DumpPageTable(output, pageTable, numPages,
-            virtual_x, virtual_width, physical_x, virtual_y, y, blocksize);
+unsigned
+AddrSpace::Dump(FILE *output, unsigned virtual_x, unsigned virtual_width,
+                unsigned physical_x, unsigned virtual_y, unsigned y,
+                unsigned blocksize)
+{
+  unsigned ret = machine->DumpPageTable(output, pageTable, numPages,
+                                        virtual_x, virtual_width, physical_x, virtual_y, y, blocksize);
 
-            DrawArea(output, 0, virtual_x, virtual_y, blocksize, &noffH.code, "code");
-            DrawArea(output, 0, virtual_x, virtual_y, blocksize, &noffH.initData, "data");
-            DrawArea(output, 0, virtual_x, virtual_y, blocksize, &noffH.uninitData, "bss");
+  DrawArea(output, 0, virtual_x, virtual_y, blocksize, &noffH.code, "code");
+  DrawArea(output, 0, virtual_x, virtual_y, blocksize, &noffH.initData, "data");
+  DrawArea(output, 0, virtual_x, virtual_y, blocksize, &noffH.uninitData, "bss");
 
-            DumpThreadsState(output, this, virtual_x, virtual_y, blocksize);
+  DumpThreadsState(output, this, virtual_x, virtual_y, blocksize);
 
-            return ret;
-          }
+  return ret;
+}
 
-          //----------------------------------------------------------------------
-          // AddrSpace::AddrSpacesRoom
-          //      Return how much room is needed for showing address spaces
-          //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::AddrSpacesRoom
+//      Return how much room is needed for showing address spaces
+//----------------------------------------------------------------------
 
-          unsigned
-          AddrSpacesRoom(unsigned blocksize)
-          {
-            ListElement *element;
-            unsigned room = 0;
+unsigned
+AddrSpacesRoom(unsigned blocksize)
+{
+  ListElement *element;
+  unsigned room = 0;
 
-            for (element = AddrSpaceList.FirstElement ();
-            element;
-            element = element->next) {
-              AddrSpace *space = (AddrSpace*) element->item;
-              room += machine->PageTableRoom(space->NumPages(), blocksize);
-            }
+  for (element = AddrSpaceList.FirstElement();
+       element;
+       element = element->next)
+  {
+    AddrSpace *space = (AddrSpace *)element->item;
+    room += machine->PageTableRoom(space->NumPages(), blocksize);
+  }
 
-            return room;
-          }
+  return room;
+}
 
-          //----------------------------------------------------------------------
-          // AddrSpace::DumpAddrSpaces
-          //      Dump all address spaces
-          //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::DumpAddrSpaces
+//      Dump all address spaces
+//----------------------------------------------------------------------
 
-          void
-          DumpAddrSpaces(FILE *output,
-            unsigned virtual_x, unsigned virtual_width,
-            unsigned physical_x, unsigned y, unsigned blocksize)
-            {
-              ListElement *element;
-              unsigned virtual_y = y;
+void DumpAddrSpaces(FILE *output,
+                    unsigned virtual_x, unsigned virtual_width,
+                    unsigned physical_x, unsigned y, unsigned blocksize)
+{
+  ListElement *element;
+  unsigned virtual_y = y;
 
-              /* TODO: sort by physical page addresses to avoid too much mess */
-              for (element = AddrSpaceList.FirstElement ();
-              element;
-              element = element->next) {
-                AddrSpace *space = (AddrSpace*) element->item;
-                virtual_y -= space->Dump(output, virtual_x, virtual_width, physical_x, virtual_y, y, blocksize);
-              }
-            }
+  /* TODO: sort by physical page addresses to avoid too much mess */
+  for (element = AddrSpaceList.FirstElement();
+       element;
+       element = element->next)
+  {
+    AddrSpace *space = (AddrSpace *)element->item;
+    virtual_y -= space->Dump(output, virtual_x, virtual_width, physical_x, virtual_y, y, blocksize);
+  }
+}
 
-            //----------------------------------------------------------------------
-            // AddrSpace::SaveState
-            //      On a context switch, save any machine state, specific
-            //      to this address space, that needs saving.
-            //
-            //      For now, nothing!
-            //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::SaveState
+//      On a context switch, save any machine state, specific
+//      to this address space, that needs saving.
+//
+//      For now, nothing!
+//----------------------------------------------------------------------
 
-            void
-            AddrSpace::SaveState ()
-            {
-            }
+void AddrSpace::SaveState()
+{
+}
 
-            //----------------------------------------------------------------------
-            // AddrSpace::RestoreState
-            //      On a context switch, restore the machine state so that
-            //      this address space can run.
-            //
-            //      For now, tell the machine where to find the page table.
-            //----------------------------------------------------------------------
+//----------------------------------------------------------------------
+// AddrSpace::RestoreState
+//      On a context switch, restore the machine state so that
+//      this address space can run.
+//
+//      For now, tell the machine where to find the page table.
+//----------------------------------------------------------------------
 
-            void
-            AddrSpace::RestoreState ()
-            {
-              machine->pageTable = pageTable;
-              machine->pageTableSize = numPages;
-            }
+void AddrSpace::RestoreState()
+{
+  machine->pageTable = pageTable;
+  machine->pageTableSize = numPages;
+}

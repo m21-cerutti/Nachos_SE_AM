@@ -1,9 +1,9 @@
 #if CHANGED
 
 /* userpages0.c
- *	Simple program to test the system call void PutString(char* s).
+ *	Brief.
  *
- *	Put first on console "Hello world!\n", then on a second call "How are you ?".
+ *	Do
  *
  * 	NOTE:
  */
