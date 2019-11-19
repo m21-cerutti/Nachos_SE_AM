@@ -63,6 +63,9 @@ static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, i
   TranslationEntry *tmpPage = machine->pageTable;
   int tmpPageSize = machine->pageTableSize;
 
+  DEBUG('p', "Initializing translation virtual adress %d\n",
+        virtualaddr);
+
   machine->pageTable = pageTable;
   machine->pageTableSize = numPages;
 
@@ -77,6 +80,8 @@ static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, i
 
   machine->pageTable = tmpPage;
   machine->pageTableSize = tmpPageSize;
+
+  DEBUG('p', "End translation.\n");
 }
 
 #endif //CHANGED
@@ -127,7 +132,13 @@ AddrSpace::AddrSpace(OpenFile *executable)
   pageTable = new TranslationEntry[numPages];
   for (i = 0; i < numPages; i++)
   {
-    pageTable[i].physicalPage = i; // for now, phys page # = virtual page #
+
+#ifdef CHANGED
+    pageTable[i].physicalPage = i + TRANSLATION_VIRTUAL; // = virtual page
+#else
+    pageTable[i].physicalPage = i; // for now, phys page
+#endif //CHANGED
+
     pageTable[i].valid = TRUE;
     pageTable[i].use = FALSE;
     pageTable[i].dirty = FALSE;

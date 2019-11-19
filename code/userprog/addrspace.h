@@ -19,61 +19,62 @@
 #include "noff.h"
 #include "list.h"
 
-#define UserStacksAreaSize		1024	// increase this as necessary!
+#define UserStacksAreaSize 1024 // increase this as necessary!
 
 #ifdef CHANGED
 
 #include "bitmap.h"
-#define StackThreadFactor 		4
+#define StackThreadFactor 4
 
 class Semaphore;
 
+#define TRANSLATION_VIRTUAL 1
+
 #endif //CHANGED
 
-class AddrSpace:dontcopythis
+class AddrSpace : dontcopythis
 {
 public:
-  AddrSpace (OpenFile * executable);	// Create an address space,
+  AddrSpace(OpenFile *executable); // Create an address space,
   // initializing it with the program
   // stored in the file "executable"
-  ~AddrSpace ();		// De-allocate an address space
+  ~AddrSpace(); // De-allocate an address space
 
-  void InitRegisters ();	// Initialize user-level CPU registers,
+  void InitRegisters(); // Initialize user-level CPU registers,
   // before jumping to user code
 
-  #ifdef CHANGED
+#ifdef CHANGED
 
-  AddrSpace* CopySpace();
+  AddrSpace *CopySpace();
   int AllocateUserStack();
   int DeleteUserStack();
 
-  #endif //CHANGED
+#endif //CHANGED
 
-  void SaveState ();		// Save/restore address space-specific
-  void RestoreState ();	// info on a context switch
+  void SaveState();    // Save/restore address space-specific
+  void RestoreState(); // info on a context switch
 
   unsigned Dump(FILE *output, unsigned virtual_x, unsigned virtual_width,
-    unsigned physical_x, unsigned virtual_y, unsigned y,
-    unsigned blocksize);
-    // Dump program layout as SVG
-    unsigned NumPages() { return numPages; }
+                unsigned physical_x, unsigned virtual_y, unsigned y,
+                unsigned blocksize);
+  // Dump program layout as SVG
+  unsigned NumPages() { return numPages; }
 
-  private:
+private:
+#ifdef CHANGED
 
-    #ifdef CHANGED
+  Semaphore *threadsCreation;
+  int nbOwners;
+  BitMap *threadsStackPartition;
 
-    Semaphore* threadsCreation;
-    int nbOwners;
-    BitMap* threadsStackPartition;
+#endif //CHANGED
 
-    #endif //CHANGED
+  NoffHeader noffH; // Program layout
 
-    NoffHeader noffH;		// Program layout
+  TranslationEntry *pageTable; // Page table
+  unsigned int numPages;       // Number of pages in the page table
+};
 
-    TranslationEntry * pageTable; // Page table
-    unsigned int numPages;	// Number of pages in the page table
-  };
+extern List AddrspaceList;
 
-  extern List AddrspaceList;
-
-  #endif // ADDRSPACE_H
+#endif // ADDRSPACE_H
