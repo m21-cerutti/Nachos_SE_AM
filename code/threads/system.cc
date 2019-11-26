@@ -35,10 +35,10 @@ SynchDisk *synchDisk;
 Machine *machine;		// user program memory and registers
 
 #ifdef CHANGED
-SynchConsole *synchconsole;
-#endif // CHANGED
 
-#ifdef CHANGED
+PageProvider *pageProvider;
+
+SynchConsole *synchconsole;
 
 Semaphore* accessBuffer;
 char* bufferSystem;
@@ -217,6 +217,8 @@ Initialize (int argc, char **argv)
   machine = new Machine (debugUserProg);	// this must come first
 
   #if CHANGED
+  pageProvider = new PageProvider();
+
   accessBuffer = new Semaphore("access buffer", 1);
   bufferSystem = new char[MAX_STRING_SIZE];
   #endif // CHANGED
@@ -265,6 +267,9 @@ Cleanup ()
   machine = NULL;
 
   #if CHANGED
+  delete pageProvider;
+  pageProvider = NULL;
+
   delete bufferSystem;
   bufferSystem = NULL;
   delete accessBuffer;

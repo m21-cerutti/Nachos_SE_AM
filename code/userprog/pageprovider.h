@@ -4,23 +4,23 @@
 #define PAGEPROVIDER_H
 
 #include "bitmap.h"
-#include "filesys.h"
-#include "translate.h"
-#include "list.h"
+
+#define ALEATORY_STRATEGY
 
 class PageProvider : dontcopythis
 {
-
 public:
     PageProvider();
+
     ~PageProvider();
 
     int GetEmptyPage();
-    void ReleasePage();
+
+    void ReleasePage(int addr);
+
     int NumAvailPage();
 
 private:
-    TranslationEntry *pageTable;
     BitMap pagesBitMap;
 };
 

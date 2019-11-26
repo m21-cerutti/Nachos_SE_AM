@@ -9,7 +9,7 @@ MAKE	:=	make
 DIRS	:=	threads userprog 
 # filesys network vm
 
-.PHONY: all clean depend print
+.PHONY: all clean depend print test
 
 all:
 	@set -e; \

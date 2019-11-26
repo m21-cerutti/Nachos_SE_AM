@@ -134,7 +134,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
   {
 
 #ifdef CHANGED
-    pageTable[i].physicalPage = i + TRANSLATION_VIRTUAL; // = virtual page
+    pageTable[i].physicalPage = pageProvider->GetEmptyPage(); // = virtual page
 #else
     pageTable[i].physicalPage = i; // for now, phys page
 #endif //CHANGED
@@ -185,6 +185,8 @@ AddrSpace::AddrSpace(OpenFile *executable)
   threadsCreation = new Semaphore("threads Creation", StackThreadFactor - 1);
   threadsStackPartition = new BitMap(StackThreadFactor);
   threadsStackPartition->Mark(0);
+
+  machine->DumpMem("fork.svg");
 #endif //CHANGED
 }
 
@@ -198,6 +200,13 @@ AddrSpace::~AddrSpace()
 #ifdef CHANGED
   delete threadsCreation;
   delete threadsStackPartition;
+
+  unsigned int i;
+  for (i = 0; i < numPages; i++)
+  {
+    pageProvider->ReleasePage(pageTable[i].physicalPage);
+  }
+
 #endif //CHANGED
 
   // LB: Missing [] for delete

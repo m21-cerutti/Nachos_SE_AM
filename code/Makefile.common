@@ -31,7 +31,7 @@ THREAD_O	:=	main.o list.o scheduler.o synch.o synchlist.o \
 			stats.o sysdep.o timer.o
 
 USERPROG_O	:=	addrspace.o bitmap.o exception.o progtest.o console.o synchconsole.o\
-			machine.o mipssim.o translate.o userthreads.o
+			machine.o mipssim.o translate.o userthreads.o pageprovider.o
 
 VM_O		:=
 
@@ -132,6 +132,11 @@ $(S_DFILES): .%.d: %.S
 ifneq ($(MAKECMDGOALS),clean)
 -include $(DFILES)
 endif
+
+#test
+.PHONY: test
+test:
+	./allTest
 
 # Cleaning rules
 .PHONY: clean
