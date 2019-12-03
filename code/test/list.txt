@@ -1,0 +1,7 @@
+exit
+exit_main
+getstring
+halt
+matmult
+putstring
+userpages0

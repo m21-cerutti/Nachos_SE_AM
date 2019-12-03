@@ -27,6 +27,7 @@
 
 #ifdef CHANGED
 #include "userthreads.h"
+#include "userforks.h"
 #endif // CHANGED
 
 //----------------------------------------------------------------------
@@ -34,16 +35,15 @@
 // the user program immediately after the "syscall" instruction.
 //----------------------------------------------------------------------
 static void
-UpdatePC ()
+UpdatePC()
 {
-    int pc = machine->ReadRegister (PCReg);
-    machine->WriteRegister (PrevPCReg, pc);
-    pc = machine->ReadRegister (NextPCReg);
-    machine->WriteRegister (PCReg, pc);
-    pc += 4;
-    machine->WriteRegister (NextPCReg, pc);
+  int pc = machine->ReadRegister(PCReg);
+  machine->WriteRegister(PrevPCReg, pc);
+  pc = machine->ReadRegister(NextPCReg);
+  machine->WriteRegister(PCReg, pc);
+  pc += 4;
+  machine->WriteRegister(NextPCReg, pc);
 }
-
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -68,150 +68,177 @@ UpdatePC ()
 //      are in machine.h.
 //----------------------------------------------------------------------
 
-void
-ExceptionHandler (ExceptionType which)
+void ExceptionHandler(ExceptionType which)
 {
-    int type = machine->ReadRegister (2);
+  int type = machine->ReadRegister(2);
 
-    switch (which)
-      {
-	case SyscallException:
-          {
-	    switch (type)
-	      {
-		case SC_Halt:
-		  {
-		    DEBUG ('s', "Shutdown, initiated by user program.\n");
-		    interrupt->Halt ();
-		    break;
-		  }
+  switch (which)
+  {
+  case SyscallException:
+  {
+    switch (type)
+    {
+    case SC_Halt:
+    {
+      DEBUG('s', "Shutdown, initiated by user program.\n");
+      interrupt->Halt();
+      break;
+    }
 
-      #ifdef CHANGED
+#ifdef CHANGED
 
     case SC_PutChar:
+    {
+      char c = (char)machine->ReadRegister(4);
+      DEBUG('s', "Put a char %c, initiated by user program.\n", c);
+      synchconsole->SynchPutChar(c);
+      break;
+    }
+
+    case SC_Exit:
+    {
+      int exit_code = (int)machine->ReadRegister(4);
+      DEBUG('s', "Exit with code %d and shutdown, initiated by user program.\n", exit_code);
+      machine->WriteRegister(2, exit_code);
+      interrupt->Halt();
+      break;
+    }
+
+    case SC_PutString:
+    {
+      int str = (int)machine->ReadRegister(4);
+
+      accessBuffer->P();
+      DEBUG('s', "Put a string, initiated by user program.\n");
+      int totalWritten = 0;
+      int nbWritten = MAX_STRING_SIZE - 1;
+      while (nbWritten == MAX_STRING_SIZE - 1)
       {
-        char c = (char) machine->ReadRegister (4);
-  		  DEBUG ('s', "Put a char %c, initiated by user program.\n", c);
-        synchconsole->SynchPutChar(c);
-        break;
+        nbWritten = copyStringFromMachine(str + totalWritten, bufferSystem, MAX_STRING_SIZE);
+        DEBUG('s', "%d character written.\n", nbWritten);
+        synchconsole->SynchPutString(bufferSystem);
+        totalWritten += nbWritten;
       }
+      DEBUG('s', "%d character written total.\n", totalWritten);
+      accessBuffer->V();
+      break;
+    }
 
-      case SC_Exit:
+    case SC_GetChar:
+    {
+      int str = synchconsole->SynchGetChar();
+      DEBUG('s', "Get char \"%c\", initiated by user program.\n", str);
+      if (str == EOF)
       {
-        int exit_code = (int) machine->ReadRegister(4);
-        DEBUG ('s', "Exit with code %d and shutdown, initiated by user program.\n", exit_code);
-        machine->WriteRegister(2, exit_code);
-        interrupt->Halt ();
-        break;
+        machine->WriteRegister(2, '\0');
+        DEBUG('s', "End of file attend.\n");
       }
+      else
+        machine->WriteRegister(2, str);
+      break;
+    }
 
-      case SC_PutString:
+    case SC_GetString:
+    {
+      int addr = (int)machine->ReadRegister(4);
+      int size = (int)machine->ReadRegister(5);
+
+      accessBuffer->P();
+      DEBUG('s', "Get string with size %d, initiated by user program.\n", size);
+      int totalread = 0;
+      int nbread = MAX_STRING_SIZE - 1;
+      bufferSystem[nbread - 1] = '\0';
+      while (nbread >= MAX_STRING_SIZE - 1 && bufferSystem[nbread - 1] != '\n')
       {
-        int str = (int) machine->ReadRegister (4);
+        int remain = (size - totalread);
+        int sizeBuffer = remain > MAX_STRING_SIZE ? MAX_STRING_SIZE : remain;
 
-        accessBuffer->P();
-  		  DEBUG ('s', "Put a string, initiated by user program.\n");
-        int totalWritten = 0;
-        int nbWritten = MAX_STRING_SIZE-1;
-        while( nbWritten == MAX_STRING_SIZE-1)
-        {
-          nbWritten = copyStringFromMachine(str+totalWritten, bufferSystem, MAX_STRING_SIZE);
-    		  DEBUG ('s', "%d character written.\n", nbWritten);
-          synchconsole->SynchPutString(bufferSystem);
-          totalWritten += nbWritten;
-        }
-  		  DEBUG ('s', "%d character written total.\n", totalWritten);
-        accessBuffer->V();
-        break;
+        DEBUG('s', "Size buffer system used : %d\n", sizeBuffer);
+        synchconsole->SynchGetString(bufferSystem, sizeBuffer);
+        DEBUG('s', "Buffer content <%s>\n", bufferSystem);
+        nbread = copyStringToMachine(bufferSystem, addr + totalread, sizeBuffer);
+        DEBUG('s', "%d character read.\n", nbread);
+        totalread += nbread;
       }
+      DEBUG('s', "%d character read total.\n", totalread);
+      accessBuffer->V();
+      break;
+    }
 
-      case SC_GetChar:
+    case SC_ThreadCreate:
+    {
+
+      int addr_f = (int)machine->ReadRegister(4);
+      int addr_arg = (int)machine->ReadRegister(5);
+
+      int result = do_ThreadCreate(addr_f, addr_arg);
+      DEBUG('c', "Create new thread with result %d.\n", result);
+
+      machine->WriteRegister(2, result);
+
+      break;
+    }
+
+    case SC_ThreadExit:
+    {
+      DEBUG('c', "Exiting the thread...\n");
+      do_ThreadExit();
+      break;
+    }
+
+    case SC_ForkExec:
+    {
+      int addr_filename = (int)machine->ReadRegister(4);
+
+      DEBUG('s', "Get fork filename.\n");
+      char buffer[MAX_STRING_SIZE];
+      int totalRead = 0;
+      int nbRead = MAX_STRING_SIZE - 1;
+      while (nbRead == MAX_STRING_SIZE - 1)
       {
-        int str = synchconsole->SynchGetChar();
-  		  DEBUG ('s', "Get char \"%c\", initiated by user program.\n", str);
-        if(str == EOF){
-            machine->WriteRegister(2, '\0');
-            DEBUG('s', "End of file attend.\n");
-        }
-        else
-          machine->WriteRegister(2, str);
-        break;
+        nbRead = copyStringFromMachine(addr_filename + totalRead, buffer, MAX_STRING_SIZE);
+        DEBUG('s', "%d character written.\n", nbRead);
+        totalRead += nbRead;
       }
+      DEBUG('s', "%d character read total.\n", totalRead);
 
-      case SC_GetString:
-      {
-        int addr = (int) machine->ReadRegister (4);
-        int size = (int) machine->ReadRegister (5);
+      DEBUG('f', "Create fork...\n");
+      int result = do_ForkCreate(buffer);
+      DEBUG('f', "Create new fork with result %d.\n", result);
 
-        accessBuffer->P();
-  		  DEBUG ('s', "Get string with size %d, initiated by user program.\n", size);
-        int totalread = 0;
-        int nbread = MAX_STRING_SIZE-1;
-        bufferSystem[nbread-1] = '\0';
-        while(nbread >= MAX_STRING_SIZE-1 && bufferSystem[nbread-1] != '\n')
-        {
-          int remain = (size - totalread);
-          int sizeBuffer = remain > MAX_STRING_SIZE ? MAX_STRING_SIZE : remain;
+      machine->WriteRegister(2, result);
+      break;
+    }
 
-          DEBUG('s', "Size buffer system used : %d\n", sizeBuffer);
-          synchconsole->SynchGetString(bufferSystem, sizeBuffer);
-          DEBUG ('s',"Buffer content <%s>\n", bufferSystem);
-          nbread = copyStringToMachine(bufferSystem, addr+totalread, sizeBuffer);
-          DEBUG ('s', "%d character read.\n", nbread);
-          totalread += nbread;
-        }
-        DEBUG ('s', "%d character read total.\n", totalread);
-        accessBuffer->V();
-        break;
-      }
+#endif // CHANGED
 
-      case SC_ThreadCreate:
-        {
+    default:
+    {
+      printf("Unimplemented system call %d\n", type);
+      ASSERT(FALSE);
+    }
+    }
 
-          int addr_f = (int) machine->ReadRegister (4);
-          int addr_arg = (int) machine->ReadRegister (5);
+    // Do not forget to increment the pc before returning!
+    UpdatePC();
+    break;
+  }
 
-          int result = do_ThreadCreate(addr_f, addr_arg);
-          DEBUG ('c', "Create new thread with result %d.\n", result);
+  case PageFaultException:
+    if (!type)
+    {
+      printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
+      ASSERT(FALSE);
+    }
+    else
+    {
+      printf("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
+      ASSERT(FALSE); // For now
+    }
+    break;
 
-          machine->WriteRegister(2, result);
-
-          break;
-        }
-
-        case SC_ThreadExit:
-          {
-            DEBUG ('c', "Exiting the thread...\n");
-            do_ThreadExit();
-            break;
-          }
-
-      #endif // CHANGED
-
-		default:
-		  {
-		    printf("Unimplemented system call %d\n", type);
-		    ASSERT(FALSE);
-		  }
-	      }
-
-	    // Do not forget to increment the pc before returning!
-	    UpdatePC ();
-	    break;
-	  }
-
-	case PageFaultException:
-	  if (!type) {
-	    printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
-	    ASSERT (FALSE);
-	  } else {
-	    printf ("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
-	    ASSERT (FALSE);	// For now
-	  }
-	  break;
-
-	default:
-	  printf ("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
-	  ASSERT (FALSE);
-      }
+  default:
+    printf("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
+    ASSERT(FALSE);
+  }
 }

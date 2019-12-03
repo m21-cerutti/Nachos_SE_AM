@@ -6,10 +6,11 @@
 
 #include "system.h"
 
-typedef struct{
+typedef struct
+{
   int f;
   int arg;
-} Threads_Struct;
+} Thread_Struct;
 
 extern int do_ThreadCreate(int f, int arg);
 

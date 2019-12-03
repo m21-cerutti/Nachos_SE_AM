@@ -22,22 +22,26 @@ int PageProvider::GetEmptyPage()
     ASSERT(NumAvailPage() != 0);
 
     accessPages->P();
-    
-    #ifdef ALEATORY_STRATEGY
+
+#ifdef ALEATORY_STRATEGY
     int freePage = rand() % NumPhysPages;
-    if(! pagesBitMap.Test(freePage))
+    if (pagesBitMap.Test(freePage))
     {
+        DEBUG('p', "Get aleatory empty page %d/%d failed.\n",
+              freePage, NumPhysPages);
         freePage = pagesBitMap.Find();
     }
-    #else
+#else
     int freePage = pagesBitMap.Find();
-    #endif //ALEATORY_STRATEGY
+#endif //ALEATORY_STRATEGY
 
     pagesBitMap.Mark(freePage);
-
+    int addrPhys = freePage * PageSize;
+    DEBUG('p', "Get empty page %d/%d, \taddr phys \t0x%x.\n",
+          freePage, NumPhysPages, addrPhys);
     accessPages->V();
 
-    memset(&(machine->mainMemory[freePage * PageSize]), 0, PageSize);
+    memset(&(machine->mainMemory[addrPhys]), 0, PageSize);
     return freePage;
 }
 

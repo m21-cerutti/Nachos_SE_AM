@@ -1,6 +1,6 @@
 cd test/;
 echo "Tests :";
-ls | grep -v --invert-match -E "*.h|*.c|*.coff|*.o|*.S|*.txt|Makefile" > list;
+ls | grep -v --invert-match -E "*.h|*.c|*.coff|*.o|*.S|*.txt|Makefile" > list.txt;
 cat list;
 echo " ";
 cd ..;

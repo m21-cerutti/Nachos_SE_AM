@@ -9,22 +9,21 @@
 
 #include "syscall.h"
 
-void FonctionThreads(void* arg)
+void FonctionThreads(void *arg)
 {
   int i = 0;
-  for(; i < 1000; i++)
+  for (; i < 1000; i++)
     PutChar('t');
 
   ThreadExit();
 }
 
-
 #include "syscall.h"
 
 int main()
 {
-  void* null;
-  if(ThreadCreate(FonctionThreads, null) != 0)
+  void *null;
+  if (ThreadCreate(FonctionThreads, null) != 0)
   {
     return -1;
   }
