@@ -40,6 +40,8 @@ extern Machine *machine; // user program memory and registers
 
 #ifdef CHANGED
 
+extern int NB_PROCESSUS;
+
 #include "pageprovider.h"
 extern PageProvider *pageProvider;
 

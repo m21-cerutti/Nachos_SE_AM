@@ -25,10 +25,6 @@ int main()
   PutString("Hello world!\n");
   PutString("How are you ?\n");
   print('a', 10);
-  while (1)
-    ;
-
-  return 0;
 }
 
 #endif // CHANGED

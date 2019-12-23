@@ -41,8 +41,4 @@ int do_ForkCreate(char *filename)
     return 0;
 }
 
-void do_ForkExit(void)
-{
-}
-
 #endif // CHANGED

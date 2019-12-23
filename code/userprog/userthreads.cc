@@ -54,9 +54,9 @@ int do_ThreadCreate(int f, int arg)
 
 void do_ThreadExit(void)
 {
-  DEBUG('c', "Exit the thread.\n");
   int lastThreads = currentThread->space->DeleteUserStack();
-  if (lastThreads == 0)
+  DEBUG('c', "Exit the thread, remains %d.\n", lastThreads);
+  if (lastThreads == 0 && NB_PROCESSUS <= 1)
   {
     DEBUG('c', "Last thread of processus, Shutdown.\n");
     interrupt->Halt();

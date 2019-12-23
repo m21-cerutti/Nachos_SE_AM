@@ -36,6 +36,8 @@ Machine *machine;		// user program memory and registers
 
 #ifdef CHANGED
 
+int NB_PROCESSUS;
+
 PageProvider *pageProvider;
 
 SynchConsole *synchconsole;
@@ -217,6 +219,8 @@ Initialize (int argc, char **argv)
   machine = new Machine (debugUserProg);	// this must come first
 
   #if CHANGED
+  NB_PROCESSUS = 1;
+
   pageProvider = new PageProvider();
 
   accessBuffer = new Semaphore("access buffer", 1);

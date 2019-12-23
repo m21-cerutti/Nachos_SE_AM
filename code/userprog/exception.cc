@@ -100,7 +100,18 @@ void ExceptionHandler(ExceptionType which)
       int exit_code = (int)machine->ReadRegister(4);
       DEBUG('s', "Exit with code %d and shutdown, initiated by user program.\n", exit_code);
       machine->WriteRegister(2, exit_code);
-      interrupt->Halt();
+
+      if(NB_PROCESSUS <= 1) 
+	{
+	  DEBUG('c', "Exit.\n");
+          interrupt->Halt();
+	}
+      else
+	{
+          NB_PROCESSUS --;
+	  DEBUG('c', "Exiting, but remains other processus...\n");
+	  do_ThreadExit();
+	}
       break;
     }
 
@@ -174,6 +185,7 @@ void ExceptionHandler(ExceptionType which)
       int result = do_ThreadCreate(addr_f, addr_arg);
       DEBUG('c', "Create new thread with result %d.\n", result);
 
+      NB_PROCESSUS++;
       machine->WriteRegister(2, result);
 
       break;
@@ -181,6 +193,7 @@ void ExceptionHandler(ExceptionType which)
 
     case SC_ThreadExit:
     {
+      NB_PROCESSUS--;
       DEBUG('c', "Exiting the thread...\n");
       do_ThreadExit();
       break;
@@ -206,6 +219,7 @@ void ExceptionHandler(ExceptionType which)
       int result = do_ForkCreate(buffer);
       DEBUG('f', "Create new fork with result %d.\n", result);
 
+      NB_PROCESSUS++;
       machine->WriteRegister(2, result);
       break;
     }

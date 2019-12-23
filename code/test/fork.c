@@ -13,10 +13,9 @@
 int main()
 {
     ForkExec("../test/userpages0");
-    ForkExec("../test/userpages0");
-    while (1)
-        ;
-    return 0;
+    ForkExec("../test/userpages1");
+
+  return 0;
 }
 
 #endif // CHANGED
