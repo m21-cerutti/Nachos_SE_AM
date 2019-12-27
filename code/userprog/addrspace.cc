@@ -192,7 +192,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 //----------------------------------------------------------------------
 // AddrSpace::~AddrSpace
-//      Dealloate an address space.  Nothing for now!
+//      Deallocate an address space.  Nothing for now!
 //----------------------------------------------------------------------
 
 AddrSpace::~AddrSpace()
