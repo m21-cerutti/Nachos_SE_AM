@@ -1,6 +1,6 @@
 cd test/;
 echo "Tests :";
-ls --ignore='*.*' | grep -v --invert-match -E "Makefile|script" > list.txt;
+ls --ignore='*.*' | grep -v --invert-match -E "Makefile|script|shell" > list.txt;
 cat list.txt;
 echo " ";
 cd ..;
