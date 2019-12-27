@@ -101,17 +101,17 @@ void ExceptionHandler(ExceptionType which)
       DEBUG('s', "Exit with code %d and shutdown, initiated by user program.\n", exit_code);
       machine->WriteRegister(2, exit_code);
 
-      if(NB_PROCESSUS <= 1) 
-	{
-	  DEBUG('c', "Exit.\n");
-          interrupt->Halt();
-	}
+      if (NB_PROCESSUS <= 1)
+      {
+        DEBUG('c', "Exit.\n");
+        interrupt->Halt();
+      }
       else
-	{
-          NB_PROCESSUS --;
-	  DEBUG('c', "Exiting, but remains other processus...\n");
-	  do_ThreadExit();
-	}
+      {
+        NB_PROCESSUS--;
+        DEBUG('c', "Exiting, but remains other processus...\n");
+        do_ThreadExit();
+      }
       break;
     }
 

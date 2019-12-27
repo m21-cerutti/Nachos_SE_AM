@@ -14,7 +14,7 @@
 
 #ifdef CHANGED
 #include "synchconsole.h" //les consignes mettent des chevrons <synchconsole.h>
-#endif //CHANGED
+#endif                    //CHANGED
 
 #include "addrspace.h"
 #include "synch.h"
@@ -25,36 +25,35 @@
 //      memory, and jump to it.
 //----------------------------------------------------------------------
 
-void
-StartProcess (char *filename)
+void StartProcess(char *filename)
 {
-  OpenFile *executable = fileSystem->Open (filename);
+  OpenFile *executable = fileSystem->Open(filename);
   AddrSpace *space;
 
   if (executable == NULL)
   {
-    SetColor (stdout, ColorRed);
-    SetBold (stdout);
-    printf ("Unable to open file %s\n", filename);
-    ClearColor (stdout);
+    SetColor(stdout, ColorRed);
+    SetBold(stdout);
+    printf("Unable to open file %s\n", filename);
+    ClearColor(stdout);
     return;
   }
-  space = new AddrSpace (executable);
+  space = new AddrSpace(executable);
   currentThread->space = space;
 
-  delete executable;		// close file
+  delete executable; // close file
 
-  space->InitRegisters ();	// set the initial register values
-  space->RestoreState ();	// load page table register
+  space->InitRegisters(); // set the initial register values
+  space->RestoreState();  // load page table register
 
-  #ifdef CHANGED
+#ifdef CHANGED
   // Non initialised variable make errors with debug memory.
-  machine->DumpMem ("memory.svg");
-  #else
-  machine->DumpMem ("memory.svg");
-  #endif //CHANGED
-  machine->Run ();		// jump to the user progam
-  ASSERT (FALSE);		// machine->Run never returns;
+  machine->DumpMem("memory.svg");
+#else
+  machine->DumpMem("memory.svg");
+#endif            //CHANGED
+  machine->Run(); // jump to the user progam
+  ASSERT(FALSE);  // machine->Run never returns;
   // the address space exits
   // by doing the syscall "exit"
 }
@@ -72,16 +71,16 @@ static Semaphore *writeDone;
 //----------------------------------------------------------------------
 
 static void
-ReadAvailHandler (void *arg)
+ReadAvailHandler(void *arg)
 {
-  (void) arg;
-  readAvail->V ();
+  (void)arg;
+  readAvail->V();
 }
 static void
-WriteDoneHandler (void *arg)
+WriteDoneHandler(void *arg)
 {
-  (void) arg;
-  writeDone->V ();
+  (void)arg;
+  writeDone->V();
 }
 
 //----------------------------------------------------------------------
@@ -92,59 +91,59 @@ WriteDoneHandler (void *arg)
 
 #ifdef CHANGED
 
-void echoChar(Console* cons, const char ch)
+void echoChar(Console *cons, const char ch)
 {
-  if(cons == NULL || writeDone == NULL)
-  return;
-  if(ch != '\n' && ch != EOF){
+  if (cons == NULL || writeDone == NULL)
+    return;
+  if (ch != '\n' && ch != EOF)
+  {
     cons->PutChar('<');
-    writeDone->P ();
+    writeDone->P();
     cons->PutChar(ch);
-    writeDone->P ();
+    writeDone->P();
     cons->PutChar('>');
-    writeDone->P ();
+    writeDone->P();
   }
   else
   {
     cons->PutChar('\n');
-    writeDone->P ();
+    writeDone->P();
   }
 }
 #endif // CHANGED
 
-
-
-void ConsoleTest (const char *in, const char *out)
+void ConsoleTest(const char *in, const char *out)
 {
   char ch;
-  printf ("Pour quitter, appuyez sur Ctrl+D\n\n");
-  readAvail = new Semaphore ("read avail", 0);
-  writeDone = new Semaphore ("write done", 0);
-  console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
+  printf("Pour quitter, appuyez sur Ctrl+D\n\n");
+  readAvail = new Semaphore("read avail", 0);
+  writeDone = new Semaphore("write done", 0);
+  console = new Console(in, out, ReadAvailHandler, WriteDoneHandler, 0);
 
   for (;;)
   {
-    readAvail->P ();	// wait for character to arrive
-    ch = console->GetChar ();
+    readAvail->P(); // wait for character to arrive
+    ch = console->GetChar();
 
-    #ifdef CHANGED
+#ifdef CHANGED
 
     echoChar(console, ch);
 
-    #else
+#else
 
-    console->PutChar (ch);	// echo it!
-    writeDone->P ();	// wait for write to finish
+    console->PutChar(ch); // echo it!
+    writeDone->P();       // wait for write to finish
 
-    #endif // CHANGED
+#endif // CHANGED
 
-    if (ch == EOF) {
+    if (ch == EOF)
+    {
 
-      #ifdef CHANGED
-      printf ("\nAu revoir.\n\n");
-      #endif // CHANGED
+#ifdef CHANGED
+      printf("\nAu revoir.\n\n");
+#endif // CHANGED
 
-      break;		// if q, quit
+      break; // if q, quit
     }
   }
   delete console;
@@ -154,10 +153,10 @@ void ConsoleTest (const char *in, const char *out)
 
 #ifdef CHANGED
 
-void SynchConsoleTest (const char* in, const char* out)
+void SynchConsoleTest(const char *in, const char *out)
 {
   char ch;
-  SynchConsole* test_synchconsole = new SynchConsole(in, out);
+  SynchConsole *test_synchconsole = new SynchConsole(in, out);
   while ((ch = test_synchconsole->SynchGetChar()) != EOF)
   {
     test_synchconsole->SynchPutChar('<');

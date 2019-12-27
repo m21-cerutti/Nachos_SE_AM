@@ -1,34 +1,30 @@
 #if CHANGED
 
 /* userpages1.c
- *	Brief.
- *
- *	Do
- *
- * 	NOTE:
+ *	Test for a user program number two.
  */
 
 #include "syscall.h"
 
-#define THIS "aaa\0"
+#define THIS "aaa"
 
-#define THAT "bbb\0"
+#define THAT "bbb"
 
 const int N = 10; // Choose it large enough!
 
-void puts(const char*s)
+void puts(const char *s)
 {
-   const char*p;
-   for (p = s;*p != '\0'; p++) 
-	PutChar(*p);
+   const char *p;
+   for (p = s; *p != '\0'; p++)
+      PutChar(*p);
 }
 
-void f(void*arg)
+void f(void *arg)
 {
-   const char*s = arg;
+   const char *s = arg;
    int i;
    for (i = 0; i < N; i++)
-	puts(s);
+      puts(s);
    ThreadExit();
 }
 
@@ -38,6 +34,5 @@ int main()
    f(THAT);
    ThreadExit();
 }
-
 
 #endif // CHANGED

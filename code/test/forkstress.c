@@ -1,11 +1,9 @@
 #if CHANGED
 
 /* fork.c
- *	Simple program to test the system call char ForkExec().
+ *	Simple program to stress the system with the creation of new processus with Fork.
  *
- *	Do
- *
- * 	NOTE: 
+ *	Do the creation of forked processus, for stress of threads. Permit to cumulate the two tests.
  */
 
 #include "syscall.h"
@@ -14,11 +12,11 @@
 
 int main()
 {
-   int i;
-   for(i=0; i<NB_PROCESS; i++)
-   {
-       ForkExec("../test/forkstress_func");
-   }
+    int i;
+    for (i = 0; i < NB_PROCESS; i++)
+    {
+        ForkExec("../test/threadstress_forkfunc");
+    }
 }
 
 #endif // CHANGED

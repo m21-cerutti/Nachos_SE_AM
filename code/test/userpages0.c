@@ -1,11 +1,7 @@
 #if CHANGED
 
 /* userpages0.c
- *	Brief.
- *
- *	Do
- *
- * 	NOTE:
+ *	Test for a user program.
  */
 
 #include "syscall.h"
